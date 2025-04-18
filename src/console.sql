@@ -14,10 +14,10 @@ CREATE TABLE admin
 CREATE TABLE product
 (
     id    INT PRIMARY KEY AUTO_INCREMENT,
-    name  VARCHAR(100)   NOT NULL,
-    brand VARCHAR(50)    NOT NULL,
-    price DECIMAL(12, 2) NOT NULL,
-    stock INT            NOT NULL
+    name  VARCHAR(100)                      NOT NULL,
+    brand VARCHAR(50)                       NOT NULL,
+    price DECIMAL(12, 2) check ( 0 < price) NOT NULL,
+    stock INT check ( 0 <= stock)           NOT NULL
 );
 
 -- 3. Tạo bảng Customer (Khách hàng)
@@ -53,11 +53,11 @@ CREATE TABLE invoice_details
 );
 
 insert into admin(username, password)
-values
-    ('duongdinh', '13012005');
+values ('duongdinh', '13012005');
+
 -- Đăng nhập Admin
 DELIMITER //
-CREATE PROCEDURE PROC_ADMIN_LOGIN(IN user_name VARCHAR(50), IN pass VARCHAR(50))
+CREATE PROCEDURE PROC_ADMIN_LOGIN(IN user_name VARCHAR(50), IN pass VARCHAR(225))
 BEGIN
     SELECT * FROM admin WHERE username = user_name AND password = pass;
 END //
@@ -65,7 +65,8 @@ DELIMITER ;
 
 -- Thêm sản phẩm
 DELIMITER //
-CREATE PROCEDURE PROC_INSERT_PRODUCT(IN p_name VARCHAR(100), IN p_brand VARCHAR(50), IN p_price DECIMAL(12,2), IN p_stock INT)
+CREATE PROCEDURE PROC_INSERT_PRODUCT(IN p_name VARCHAR(100), IN p_brand VARCHAR(50), IN p_price DECIMAL(12, 2),
+                                     IN p_stock INT)
 BEGIN
     INSERT INTO product(name, brand, price, stock) VALUES (p_name, p_brand, p_price, p_stock);
 END;
@@ -83,7 +84,8 @@ DELIMITER ;
 
 -- Cập nhật sản phẩm
 DELIMITER //
-CREATE PROCEDURE PROC_UPDATE_PRODUCT(IN p_id INT, IN p_name VARCHAR(100), IN p_brand VARCHAR(50), IN p_price DECIMAL(12,2), IN p_stock INT)
+CREATE PROCEDURE PROC_UPDATE_PRODUCT(IN p_id INT, IN p_name VARCHAR(100), IN p_brand VARCHAR(50),
+                                     IN p_price DECIMAL(12, 2), IN p_stock INT)
 BEGIN
     UPDATE product SET name = p_name, brand = p_brand, price = p_price, stock = p_stock WHERE id = p_id;
 END;
@@ -96,6 +98,32 @@ CREATE PROCEDURE PROC_DELETE_PRODUCT(IN p_id INT)
 BEGIN
     DELETE FROM product WHERE id = p_id;
 END;
+
+-- Lấy id sản phẩm
+create procedure get_product_by_id(id_in int)
+begin
+    select * from product where id = id_in;
+end;
+
+-- Tìm theo nhãn hàng
+CREATE PROCEDURE PROC_FIND_BY_BRAND(IN p_brand VARCHAR(50))
+BEGIN
+    SELECT * FROM product WHERE brand = p_brand;
+END;
+//
+
+-- Tìm theo khoảng giá
+CREATE PROCEDURE PROC_FIND_BY_PRICE_RANGE(IN min_price DECIMAL(12, 2), IN max_price DECIMAL(12, 2))
+BEGIN
+    SELECT * FROM product WHERE price BETWEEN min_price AND max_price;
+END;
+//
+
+-- Tìm theo tồn kho
+CREATE PROCEDURE PROC_FIND_PRODUCT_BY_STOCK(IN min_stock INT, IN max_stock INT)
+BEGIN
+    SELECT * FROM product WHERE stock BETWEEN min_stock AND max_stock;
+END //
 //
 DELIMITER ;
 
