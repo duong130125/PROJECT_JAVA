@@ -1,6 +1,8 @@
 package ra.edu.business.model;
 
 import ra.edu.utils.IApp;
+import ra.edu.validate.ProductValidator;
+import ra.edu.validate.Validator;
 
 import java.util.Scanner;
 
@@ -64,14 +66,19 @@ public class Product implements IApp {
 
     @Override
     public void inputData(Scanner scanner) {
-        System.out.print("Nhập tên sản phẩm: ");
-        setName(scanner.nextLine());
-        System.out.print("Nhập thương hiệu sản phẩm: ");
-        setBrand(scanner.nextLine());
-        System.out.print("Nhập giá sản phẩm: ");
-        setPrice(Double.parseDouble(scanner.nextLine()));
-        System.out.print("Nhập số lượng tồn kho sản phẩm: ");
-        setStock(Integer.parseInt(scanner.nextLine()));
+        this.name = inputProductName(scanner);
+        this.brand = inputProductBrand(scanner);
+        this.price = Validator.validateDouble(scanner, "Nhập giá của sản phẩm: ");
+        this.stock = Validator.validateInt(scanner, "Nhập số lượng sản phẩm tồn kho: ");
+    }
+
+    public String inputProductName(Scanner scanner) {
+        String productName = Validator.validateString(scanner, "Nhập vào tên sản phẩm: ", 1, 100);
+        return ProductValidator.isProductExist(scanner, productName);
+    }
+
+    public String inputProductBrand(Scanner scanner) {
+        return Validator.validateString(scanner, "Nhập thương hiệu sản phẩm: ", 1, 50);
     }
 
     @Override

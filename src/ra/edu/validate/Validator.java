@@ -7,15 +7,19 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Validator {
-    // Biểu thức chính quy kiểm tra email và số điện thoại
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^(0[3|5|7|8|9])[0-9]{8}$");
+    // Biểu thức chính quy kiểm tra email, số điện thoại và Date
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    private static final String PHONE_VIETTEL_PREFIXES = "086|096|097|098|039|038|037|036|035|034|033|032";
+    private static final String PHONE_VINAPHONE_PREFIXES = "091|094|088|083|084|085|081|082";
+    private static final String PHONE_MOBIFONE_PREFIXES = "070|079|077|076|078|089|090|093";
+    private static final Pattern PHONE_PATTERN = Pattern.compile("(" + PHONE_VIETTEL_PREFIXES + "|" + PHONE_VINAPHONE_PREFIXES + "|" + PHONE_MOBIFONE_PREFIXES + ")\\d{7}");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     // Validate số nguyên
-    public static int validateInt(Scanner scanner) {
+    public static int validateInt(Scanner scanner, String message) {
         while (true) {
             try {
+                System.out.print(message);
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số nguyên.");
@@ -24,9 +28,10 @@ public class Validator {
     }
 
     // Validate số thực float
-    public static float validateFloat(Scanner scanner) {
+    public static float validateFloat(Scanner scanner, String message) {
         while (true) {
             try {
+                System.out.print(message);
                 return Float.parseFloat(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số thực (float).");
@@ -35,9 +40,10 @@ public class Validator {
     }
 
     // Validate số thực double
-    public static double validateDouble(Scanner scanner) {
+    public static double validateDouble(Scanner scanner, String message) {
         while (true) {
             try {
+                System.out.print(message);
                 return Double.parseDouble(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số thực (double).");
@@ -46,8 +52,9 @@ public class Validator {
     }
 
     // Validate kiểu boolean (true/false)
-    public static boolean validateBoolean(Scanner scanner) {
+    public static boolean validateBoolean(Scanner scanner, String message) {
         while (true) {
+            System.out.print(message);
             String input = scanner.nextLine().trim().toLowerCase();
             if (input.equals("true") || input.equals("false")) {
                 return Boolean.parseBoolean(input);
@@ -57,8 +64,9 @@ public class Validator {
     }
 
     // Validate chuỗi không được rỗng và nằm trong khoảng độ dài
-    public static String validateString(Scanner scanner, int min, int max) {
+    public static String validateString(Scanner scanner, String message, int min, int max) {
         while (true) {
+            System.out.print(message);
             String input = scanner.nextLine().trim();
             if (!input.isEmpty() && input.length() >= min && input.length() <= max) {
                 return input;
@@ -68,8 +76,9 @@ public class Validator {
     }
 
     // Validate định dạng email
-    public static String validateEmail(Scanner scanner) {
+    public static String validateEmail(Scanner scanner, String message) {
         while (true) {
+            System.out.print(message);
             String input = scanner.nextLine().trim();
             if (EMAIL_PATTERN.matcher(input).matches()) {
                 return input;
@@ -79,8 +88,9 @@ public class Validator {
     }
 
     // Validate số điện thoại Việt Nam
-    public static String validatePhone(Scanner scanner) {
+    public static String validatePhone(Scanner scanner, String message) {
         while (true) {
+            System.out.print(message);
             String input = scanner.nextLine().trim();
             if (PHONE_PATTERN.matcher(input).matches()) {
                 return input;
@@ -89,9 +99,8 @@ public class Validator {
         }
     }
 
-
     // Validate ngày theo định dạng dd/MM/yyyy
-    public static LocalDate validateDate(Scanner scanner) {
+    public static LocalDate validateDate(Scanner scanner, String message) {
         while (true) {
             String input = scanner.nextLine().trim();
             try {

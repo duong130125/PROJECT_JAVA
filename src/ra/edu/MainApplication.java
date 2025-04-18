@@ -13,9 +13,8 @@ public class MainApplication {
             System.out.println("1. Đăng nhập Admin");
             System.out.println("2. Thoát");
             System.out.println("==================================================");
-            System.out.print("Nhập lựa chọn của bạn: ");
 
-            int choice = Validator.validateInt(scanner);
+            int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
 
             switch (choice) {
                 case 1:
@@ -43,8 +42,7 @@ public class MainApplication {
             System.out.println("4. Thống kê doanh thu");
             System.out.println("5. Đăng xuất");
             System.out.println("================================");
-            System.out.print("Nhập lựa chọn của bạn: ");
-            int choice = Validator.validateInt(scanner);
+            int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
             switch (choice) {
                 case 1:
                     ProductUI.displayProductMenu(scanner);

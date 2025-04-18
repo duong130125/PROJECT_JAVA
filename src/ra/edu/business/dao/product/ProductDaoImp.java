@@ -76,4 +76,100 @@ public class ProductDaoImp implements ProductDao {
         }
         return false;
     }
+
+    @Override
+    public Product findById(int id) {
+        Connection conn = null;
+        CallableStatement callSt = null;
+        Product product = null;
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{call get_product_by_id(?)}");
+            callSt.setInt(1, id);
+
+            ResultSet rs = callSt.executeQuery();
+            if (rs.next()) {
+                product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setBrand(rs.getString("brand"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+            }
+        } catch (SQLException e) {
+            e.fillInStackTrace();
+        } catch (Exception e) {
+            e.fillInStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
+        }
+        return product;
+    }
+
+    @Override
+    public List<Product> findByBrand(String brand) {
+        List<Product> list = new ArrayList<>();
+        try (Connection conn = ConnectionDB.openConnection();
+             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_BRAND(?)}")) {
+            call.setString(1, brand);
+            ResultSet rs = call.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
+                        rs.getDouble("price"), rs.getInt("stock")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Product> findByPriceRange(double min, double max) {
+        List<Product> list = new ArrayList<>();
+        try (Connection conn = ConnectionDB.openConnection();
+             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_PRICE_RANGE(?, ?)}")) {
+            call.setDouble(1, min);
+            call.setDouble(2, max);
+            ResultSet rs = call.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
+                        rs.getDouble("price"), rs.getInt("stock")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Product> findByStock(int min,  int max) {
+        List<Product> productList = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{call PROC_FIND_PRODUCT_BY_STOCK(?, ?)}");
+            callSt.setInt(1, min);
+            callSt.setInt(2, max);
+
+            ResultSet rs = callSt.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setBrand(rs.getString("brand"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+                productList.add(product);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
+        }
+
+        return productList;
+    }
 }

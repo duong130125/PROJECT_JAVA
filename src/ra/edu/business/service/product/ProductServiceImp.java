@@ -28,4 +28,24 @@ public class ProductServiceImp implements ProductService {
     public boolean delete(Product product) {
         return productDao.delete(product);
     }
+
+    @Override
+    public Product findById(int id) {
+        return productDao.findById(id);
+    }
+
+    @Override
+    public List<Product> findByBrand(String brand) {
+        return productDao.findByBrand(brand);
+    }
+
+    @Override
+    public List<Product> findByPriceRange(double min, double max) {
+        return productDao.findByPriceRange(min, max);
+    }
+
+    @Override
+    public List<Product> findByStock(int min, int max) {
+        return productDao.findByStock(min, max);
+    }
 }
