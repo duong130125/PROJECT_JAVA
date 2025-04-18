@@ -68,7 +68,7 @@ public class ProductUI {
             product.inputData(scanner);
             boolean result = productService.save(product);
             if (result) {
-                System.out.println("Thêm mới thành công");
+                System.out.println("Thêm mới sản phẩm thành công");
             } else {
                 System.err.println("Có lỗi trong quá trình thêm mới");
             }
@@ -84,7 +84,7 @@ public class ProductUI {
             product.inputData(scanner);
             boolean result = productService.update(product);
             if (result) {
-                System.out.println("Cập nhật thành công");
+                System.out.println("Cập nhật thành công sản phẩm");
             } else {
                 System.err.println("Có lỗi trong quá trình cập nhật");
             }
