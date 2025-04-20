@@ -1,19 +1,20 @@
 package ra.edu.validate;
 
-import ra.edu.business.model.Product;
+import ra.edu.business.model.Customer;
 
 import java.util.List;
 import java.util.Scanner;
 
-import static ra.edu.presentation.ProductUI.productService;
+import static ra.edu.presentation.CustomerUI.customerService;
 
-public class ProductValidator {
-    static List<Product> listProducts = productService.findAll();
-    public static String isProductExist(Scanner scanner, String value) {
+
+public class CustomerValidator {
+    static List<Customer> listCustomer = customerService.findAll();
+    public static String isEmailUnique(Scanner scanner, String value) {
         do {
             boolean isDuplicate = false;
-            for (Product product : listProducts) {
-                if (product.getName().equals(value)) {
+            for (Customer customer : listCustomer) {
+                if (customer.getName().equals(value)) {
                     isDuplicate = true;
                     break;
                 }
@@ -21,7 +22,7 @@ public class ProductValidator {
 
             // Nếu trùng lặp, yêu cầu nhập lại
             if (isDuplicate) {
-                System.err.println("Sản phẩm đã tồn tại, vui lòng nhập lại");
+                System.err.println("Email đã tồn tại, vui lòng nhập lại");
                 value = scanner.nextLine();
             } else {
                 // Không trùng lặp, thoát vòng lặp

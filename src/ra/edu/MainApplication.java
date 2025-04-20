@@ -45,15 +45,19 @@ public class MainApplication {
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
             switch (choice) {
                 case 1:
+                    System.out.println("Bắt đầu vào trang quản lý sản phẩm!!!");
                     ProductUI.displayProductMenu(scanner);
                     break;
                 case 2:
-                    CustomerUI.displayCustomerMenu();
+                    System.out.println("Bắt đầu vào trang quản lý khách hàng!!!");
+                    CustomerUI.displayCustomerMenu(scanner);
                     break;
                 case 3:
+                    System.out.println("Bắt đầu vào trang quản lý hóa đơn!!!");
                     InvoiceUI.displayInvoiceMenu();
                     break;
                 case 4:
+                    System.out.println("Bắt đầu vào trang quản lý thống kê!!!");
                     StatisticUI.displayStatisticMenu();
                     break;
                 case 5:

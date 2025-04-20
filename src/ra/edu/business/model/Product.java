@@ -81,9 +81,60 @@ public class Product implements IApp {
         return Validator.validateString(scanner, "Nhập thương hiệu sản phẩm: ", 1, 50);
     }
 
+    // ANSI color codes
+    public static final String RESET = "\u001B[0m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String RED = "\u001B[31m";
+
+    // Max column widths (you can dynamically calculate this in real case)
+    private static final int WIDTH_ID = 10;
+    private static final int WIDTH_NAME = 25;
+    private static final int WIDTH_BRAND = 20;
+    private static final int WIDTH_PRICE = 18;
+    private static final int WIDTH_STOCK = 10;
+
+    private String formatProductData() {
+        return String.format("| " + GREEN + "%-" + WIDTH_ID + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_NAME + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_BRAND + "s" + RESET + " | "
+                        + RED + "%," + WIDTH_PRICE + ".2f" + RESET + " | "
+                        + GREEN + "%" + WIDTH_STOCK + "d" + RESET + " |",
+                id, name, brand, price, stock);
+    }
+
+    private static String repeat(char ch, int length) {
+        return new String(new char[length]).replace('\0', ch);
+    }
+
+    private static String getSeparatorLine() {
+        return "+" + repeat('-', WIDTH_ID + 2)
+                + "+" + repeat('-', WIDTH_NAME + 2)
+                + "+" + repeat('-', WIDTH_BRAND + 2)
+                + "+" + repeat('-', WIDTH_PRICE + 2)
+                + "+" + repeat('-', WIDTH_STOCK + 2) + "+";
+    }
+
+    private static String getTableHeader() {
+        return getSeparatorLine() + "\n" +
+                String.format("| " + YELLOW + "%-" + WIDTH_ID + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_NAME + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_BRAND + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_PRICE + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_STOCK + "s" + RESET + " |",
+                        "MÃ SP", "TÊN SẢN PHẨM", "THƯƠNG HIỆU", "GIÁ (VNĐ)", "TỒN KHO") + "\n" +
+                getSeparatorLine();
+    }
+
+    private static String getTableFooter() {
+        return getSeparatorLine();
+    }
+
     @Override
     public String toString() {
-        return "Mã sản phẩm: " + this.id + " - Tên sản phẩm: "
-                + this.name + " - Thương hiệu: " + this.brand + " - Số lương tồn kho: " + this.stock;
+        return getTableHeader() + "\n" +
+                formatProductData() + "\n" +
+                getTableFooter();
     }
+
 }

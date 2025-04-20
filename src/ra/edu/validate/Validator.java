@@ -15,36 +15,51 @@ public class Validator {
     private static final Pattern PHONE_PATTERN = Pattern.compile("(" + PHONE_VIETTEL_PREFIXES + "|" + PHONE_VINAPHONE_PREFIXES + "|" + PHONE_MOBIFONE_PREFIXES + ")\\d{7}");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // Validate số nguyên
+    // Validate số nguyên lớn hơn hoặc bằng 0
     public static int validateInt(Scanner scanner, String message) {
         while (true) {
             try {
                 System.out.print(message);
-                return Integer.parseInt(scanner.nextLine());
+                int value = Integer.parseInt(scanner.nextLine());
+                if (value >= 0) {
+                    return value;
+                } else {
+                    System.out.println("Vui lòng nhập số nguyên lớn hơn hoặc bằng 0.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số nguyên.");
             }
         }
     }
 
-    // Validate số thực float
+    // Validate số thực float lớn hơn hoặc bằng 0
     public static float validateFloat(Scanner scanner, String message) {
         while (true) {
             try {
                 System.out.print(message);
-                return Float.parseFloat(scanner.nextLine());
+                float value = Float.parseFloat(scanner.nextLine());
+                if (value >= 0) {
+                    return value;
+                } else {
+                    System.out.println("Vui lòng nhập số thực (float) lớn hơn hoặc bằng 0.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số thực (float).");
             }
         }
     }
 
-    // Validate số thực double
+    // Validate số thực double lớn hơn hoặc bằng 0
     public static double validateDouble(Scanner scanner, String message) {
         while (true) {
             try {
                 System.out.print(message);
-                return Double.parseDouble(scanner.nextLine());
+                double value = Double.parseDouble(scanner.nextLine());
+                if (value >= 0) {
+                    return value;
+                } else {
+                    System.out.println("Vui lòng nhập số thực (double) lớn hơn hoặc bằng 0.");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số thực (double).");
             }

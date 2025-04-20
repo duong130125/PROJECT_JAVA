@@ -35,6 +35,11 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
+    public Product findByName(String name) {
+        return null;
+    }
+
+    @Override
     public List<Product> findByBrand(String brand) {
         return productDao.findByBrand(brand);
     }

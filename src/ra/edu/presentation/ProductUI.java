@@ -56,13 +56,13 @@ public class ProductUI {
     }
 
     public static void displayListProducts() {
+        System.out.println("========== DANH SÁCH SẢN PHẨM ==========");
         List<Product> listProducts = productService.findAll();
         listProducts.forEach(System.out::println);
     }
 
     public static void createProducts(Scanner scanner) {
-        System.out.println("Nhập vào số sản phẩm cần thêm mới:");
-        int size = Integer.parseInt(scanner.nextLine());
+        int size = Validator.validateInt(scanner, "Nhập vào số sản phẩm cần thêm mới: ");
         for (int i = 0; i < size; i++) {
             Product product = new Product();
             product.inputData(scanner);
@@ -73,11 +73,11 @@ public class ProductUI {
                 System.err.println("Có lỗi trong quá trình thêm mới");
             }
         }
+        displayListProducts();
     }
 
     public static void updateProduct(Scanner scanner) {
-        System.out.println("Nhập vào mã sản phẩm cần cập nhật:");
-        int productId = Integer.parseInt(scanner.nextLine());
+        int productId = Validator.validateInt(scanner, "Nhập vào mã sản phẩm cần cập nhật: ");
         if (productService.findById(productId) != null) {
             Product product = new Product();
             product.setId(productId);
@@ -85,6 +85,7 @@ public class ProductUI {
             boolean result = productService.update(product);
             if (result) {
                 System.out.println("Cập nhật thành công sản phẩm");
+                displayListProducts();
             } else {
                 System.err.println("Có lỗi trong quá trình cập nhật");
             }
@@ -94,14 +95,14 @@ public class ProductUI {
     }
 
     public static void deleteProduct(Scanner scanner) {
-        System.out.println("Nhập mã sinh viên cần xóa:");
-        int productId = Integer.parseInt(scanner.nextLine());
+        int productId = Validator.validateInt(scanner, "Nhập mã sản phẩm cần xóa: ");
         if (productService.findById(productId) != null) {
             Product product = new Product();
             product.setId(productId);
             boolean result = productService.delete(product);
             if (result) {
                 System.out.println("Xóa sản phẩm thành công");
+                displayListProducts();
             } else {
                 System.err.println("Có lỗi trong quá trình xóa.");
             }
@@ -111,8 +112,7 @@ public class ProductUI {
     }
 
     public static void searchByBrand(Scanner scanner) {
-        System.out.println("Nhập nhãn hàng cần tìm:");
-        String brand = scanner.nextLine();
+        String brand = Validator.validateString(scanner, "Nhập nhãn hàng cần tìm: ", 1, 50);
         List<Product> products = productService.findByBrand(brand);
 
         if (!products.isEmpty()) {
@@ -126,10 +126,8 @@ public class ProductUI {
     }
 
     public static void searchByPriceRange(Scanner scanner) {
-        System.out.println("Nhập giá tối thiểu:");
-        double minPrice = Double.parseDouble(scanner.nextLine());
-        System.out.println("Nhập giá tối đa:");
-        double maxPrice = Double.parseDouble(scanner.nextLine());
+        double minPrice = Validator.validateDouble(scanner, "Nhập giá tối thiểu: ");
+        double maxPrice = Validator.validateDouble(scanner, "Nhập giá tối đa: ");
 
         List<Product> products = productService.findByPriceRange(minPrice, maxPrice);
 
@@ -144,10 +142,8 @@ public class ProductUI {
     }
 
     public static void searchByStock(Scanner scanner) {
-        System.out.println("Nhập số lượng tồn kho tối thiểu:");
-        int minStock = Integer.parseInt(scanner.nextLine());
-        System.out.println("Nhập số lượng tồn kho tối đa:");
-        int maxStock = Integer.parseInt(scanner.nextLine());
+        int minStock = Validator.validateInt(scanner, "Nhập số lượng tồn kho tối thiểu: ");
+        int maxStock = Validator.validateInt(scanner, "Nhập số lượng tồn kho tối đa: ");
 
         List<Product> products = productService.findByStock(minStock, maxStock);
 

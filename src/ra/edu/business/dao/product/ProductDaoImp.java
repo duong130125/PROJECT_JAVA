@@ -107,6 +107,11 @@ public class ProductDaoImp implements ProductDao {
     }
 
     @Override
+    public Product findByName(String name) {
+        return null;
+    }
+
+    @Override
     public List<Product> findByBrand(String brand) {
         List<Product> list = new ArrayList<>();
         try (Connection conn = ConnectionDB.openConnection();
