@@ -126,13 +126,15 @@ BEGIN
 END;
 
 -- Thêm mới khách hàng
-CREATE PROCEDURE PROC_INSERT_CUSTOMER(IN cname VARCHAR(100), IN cemail VARCHAR(100), IN cphone VARCHAR(20), IN caddress VARCHAR(255))
+CREATE PROCEDURE PROC_INSERT_CUSTOMER(IN cname VARCHAR(100), IN cemail VARCHAR(100), IN cphone VARCHAR(20),
+                                      IN caddress VARCHAR(255))
 BEGIN
     INSERT INTO customer(name, email, phone, address) VALUES (cname, cemail, cphone, caddress);
 END;
 
 -- Cập nhật khách hàng
-CREATE PROCEDURE PROC_UPDATE_CUSTOMER(IN cid INT, IN cname VARCHAR(100), IN cemail VARCHAR(100), IN cphone VARCHAR(20), IN caddress VARCHAR(255))
+CREATE PROCEDURE PROC_UPDATE_CUSTOMER(IN cid INT, IN cname VARCHAR(100), IN cemail VARCHAR(100), IN cphone VARCHAR(20),
+                                      IN caddress VARCHAR(255))
 BEGIN
     UPDATE customer SET name = cname, email = cemail, phone = cphone, address = caddress WHERE id = cid;
 END;
@@ -156,20 +158,14 @@ DELIMITER //
 -- Hiện thị thông tin hóa đơn
 CREATE PROCEDURE PROC_FIND_ALL_INVOICES()
 BEGIN
-    SELECT
-        i.id,
-        c.name AS customer_name,
-        i.created_at AS invoice_date,
-        i.total_amount
-    FROM invoice i
-             JOIN customer c ON i.customer_id = c.id;
+    SELECT * FROM invoice;
 END;
 
 -- Thêm mới hóa đơn
 CREATE PROCEDURE PROC_INSERT_INVOICE(
     IN p_customer_id INT,
     IN p_created_at DATETIME,
-    IN p_total_amount DECIMAL(12,2)
+    IN p_total_amount DECIMAL(12, 2)
 )
 BEGIN
     INSERT INTO invoice (customer_id, created_at, total_amount)
@@ -192,8 +188,36 @@ CREATE PROCEDURE PROC_SEARCH_INVOICE_BY_DATE(
     IN p_date DATE
 )
 BEGIN
-    SELECT * FROM invoice
+    SELECT *
+    FROM invoice
     WHERE DATE(created_at) = p_date;
+END;
+
+-- Tổng doanh thu theo ngày
+CREATE PROCEDURE PROC_REVENUE_BY_DAY()
+BEGIN
+    SELECT DATE(created_at) AS day, SUM(total_amount) AS total_revenue
+    FROM invoice
+    GROUP BY DATE(created_at)
+    ORDER BY DATE(created_at);
+END;
+
+-- Tổng doanh thu theo tháng
+CREATE PROCEDURE PROC_REVENUE_BY_MONTH()
+BEGIN
+    SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, SUM(total_amount) AS total_revenue
+    FROM invoice
+    GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+    ORDER BY DATE_FORMAT(created_at, '%Y-%m');
+END;
+
+-- Tổng doanh thu theo năm
+CREATE PROCEDURE PROC_REVENUE_BY_YEAR()
+BEGIN
+    SELECT YEAR(created_at) AS year, SUM(total_amount) AS total_revenue
+    FROM invoice
+    GROUP BY YEAR(created_at)
+    ORDER BY YEAR(created_at);
 END;
 //
 DELIMITER ;
