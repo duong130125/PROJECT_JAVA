@@ -63,7 +63,7 @@ public class Invoice implements IApp {
     }
 
     public Integer inputInvoiceId(Scanner scanner) {
-        Integer invoiceId = Validator.validateInt(scanner, "Nhập vào mã khách hàng: ");
+        int invoiceId = Validator.validateInt(scanner, "Nhập vào mã khách hàng: ");
         return InvoiceValidator.validateCustomerExists(scanner, invoiceId);
     }
 

@@ -1,6 +1,8 @@
 package ra.edu.business.model;
 
 import ra.edu.utils.IApp;
+import ra.edu.validate.CustomerValidator;
+import ra.edu.validate.ProductValidator;
 import ra.edu.validate.Validator;
 
 import java.util.Scanner;
@@ -67,8 +69,13 @@ public class Customer implements IApp {
     public void inputData(Scanner scanner) {
         this.name = Validator.validateString(scanner,"Nhập vào tên của khách hàng: ",1, 100);
         this.phone = Validator.validatePhone(scanner, "Nhập vào số điện thoại của khách hàng: ");
-        this.email = Validator.validateEmail(scanner, "Nhập vào email của khách hàng: ");
+        this.email = inputCustomerEmail(scanner);
         this.address = Validator.validateString(scanner, "Nhập vào địa chỉ của khách hàng: ", 1, 225);
+    }
+
+    public String inputCustomerEmail(Scanner scanner) {
+        String customerEmail = Validator.validateEmail(scanner, "Nhập vào email của khách hàng: ");
+        return CustomerValidator.isEmailUnique(scanner, customerEmail);
     }
 
     @Override

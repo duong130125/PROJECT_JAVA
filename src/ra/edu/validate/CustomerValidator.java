@@ -14,7 +14,7 @@ public class CustomerValidator {
         do {
             boolean isDuplicate = false;
             for (Customer customer : listCustomer) {
-                if (customer.getName().equals(value)) {
+                if (customer.getEmail().equals(value)) {
                     isDuplicate = true;
                     break;
                 }
