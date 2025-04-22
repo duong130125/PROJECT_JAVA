@@ -3,18 +3,19 @@ package ra.edu.business.model;
 import ra.edu.utils.IApp;
 import ra.edu.validate.Validator;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Invoice implements IApp {
     private int id;
     private String customer_Id;
-    private String created_At;
+    private LocalDate created_At;
     private double total_Amount;
 
     public Invoice() {
     }
 
-    public Invoice(int id, String customer_Id, String created_At, double total_Amount) {
+    public Invoice(int id, String customer_Id, LocalDate created_At, double total_Amount) {
         this.id = id;
         this.customer_Id = customer_Id;
         this.created_At = created_At;
@@ -37,11 +38,11 @@ public class Invoice implements IApp {
         this.customer_Id = customer_Id;
     }
 
-    public String getCreated_At() {
+    public LocalDate getCreated_At() {
         return created_At;
     }
 
-    public void setCreated_At(String created_At) {
+    public void setCreated_At(LocalDate created_At) {
         this.created_At = created_At;
     }
 
@@ -57,7 +58,7 @@ public class Invoice implements IApp {
 
     public void inputData(Scanner scanner) {
         this.customer_Id = Validator.validateString(scanner, "Nhập vào mã khách hàng: ", 1, 100);
-        this.created_At = Validator.validateString(scanner, "Nhập ngày/tháng/năm của hóa đơn", 1, 100);
+        this.created_At = Validator.validateDate(scanner, "Nhập ngày/tháng/năm của hóa đơn: ");
         this.total_Amount = Validator.validateDouble(scanner, "Nhập vào tổng tiền của hóa đơn: ");
     }
 
