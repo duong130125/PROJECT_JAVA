@@ -151,3 +151,50 @@ END;
 //
 DELIMITER ;
 
+-- ****Phần Hóa Đơn****
+DELIMITER //
+-- Hiện thị thông tin hóa đơn
+CREATE PROCEDURE PROC_FIND_ALL_INVOICES()
+BEGIN
+    SELECT
+        i.id,
+        c.name AS customer_name,
+        i.created_at AS invoice_date,
+        i.total_amount
+    FROM invoice i
+             JOIN customer c ON i.customer_id = c.id;
+END;
+
+-- Thêm mới hóa đơn
+CREATE PROCEDURE PROC_INSERT_INVOICE(
+    IN p_customer_id INT,
+    IN p_created_at DATETIME,
+    IN p_total_amount DECIMAL(12,2)
+)
+BEGIN
+    INSERT INTO invoice (customer_id, created_at, total_amount)
+    VALUES (p_customer_id, p_created_at, p_total_amount);
+END;
+
+-- Tìm kiếm hóa đơn theo Tên khách hàng
+CREATE PROCEDURE PROC_SEARCH_INVOICE_BY_NAME(
+    IN p_keyword VARCHAR(100)
+)
+BEGIN
+    SELECT *
+    FROM invoice i
+             JOIN customer c ON i.customer_id = c.id
+    WHERE c.name LIKE p_keyword;
+END;
+
+-- Tìm kiếm hóa đơn theo DD/MM/YYYY
+CREATE PROCEDURE PROC_SEARCH_INVOICE_BY_DATE(
+    IN p_date DATE
+)
+BEGIN
+    SELECT * FROM invoice
+    WHERE DATE(created_at) = p_date;
+END;
+//
+DELIMITER ;
+
