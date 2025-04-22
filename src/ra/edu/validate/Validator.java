@@ -117,6 +117,7 @@ public class Validator {
     // Validate ngày theo định dạng dd/MM/yyyy
     public static LocalDate validateDate(Scanner scanner, String message) {
         while (true) {
+            System.out.print(message);
             String input = scanner.nextLine().trim();
             try {
                 return LocalDate.parse(input, DATE_FORMATTER);

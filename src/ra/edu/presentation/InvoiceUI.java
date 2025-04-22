@@ -5,11 +5,12 @@ import ra.edu.business.service.invoice.InvoiceService;
 import ra.edu.business.service.invoice.InvoiceServiceImp;
 import ra.edu.validate.Validator;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
 public class InvoiceUI {
-    private static final InvoiceService invoiceService = new InvoiceServiceImp();
+    public static final InvoiceService invoiceService = new InvoiceServiceImp();
 
     public static void displayInvoiceMenu(Scanner scanner) {
         do {
@@ -103,7 +104,7 @@ public class InvoiceUI {
     }
 
     private static void searchInvoiceByDate(Scanner scanner) {
-        String date = Validator.validateString(scanner, "Nhập ngày cần tìm: ", 1, 100);
+        LocalDate date = Validator.validateDate(scanner, "Nhập ngày cần tìm: ");
         List<Invoice> result = invoiceService.searchByDate(date);
         if (result.isEmpty()) {
             System.out.println("Không tìm thấy hóa đơn nào trong ngày " + date);

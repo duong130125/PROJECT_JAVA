@@ -25,8 +25,8 @@ public class InvoiceDaoImp implements InvoiceDao {
             while (rs.next()) {
                 Invoice i = new Invoice();
                 i.setId(rs.getInt("id"));
-                i.setCustomer_Id(rs.getString("customer_id"));
-                i.setCreated_At(rs.getDate("created_at").toLocalDate());
+                i.setCustomer_Id(rs.getInt("customer_id"));
+                i.setCreated_At(LocalDate.parse(rs.getString("created_at"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 i.setTotal_Amount(rs.getDouble("total_amount"));
                 list.add(i);
             }
@@ -47,11 +47,9 @@ public class InvoiceDaoImp implements InvoiceDao {
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call PROC_INSERT_INVOICE(?, ?, ?)}");
-            callSt.setString(1, invoice.getCustomer_Id());
-            LocalDate createdAt = invoice.getCreated_At();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dateString = createdAt.format(formatter);
-            callSt.setString(2, dateString);
+            callSt.setInt(1, invoice.getCustomer_Id());
+            java.sql.Date sqlDate = java.sql.Date.valueOf(invoice.getCreated_At());
+            callSt.setDate(2, sqlDate);
             callSt.setDouble(3, invoice.getTotal_Amount());
             result = callSt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -89,7 +87,7 @@ public class InvoiceDaoImp implements InvoiceDao {
             while (rs.next()) {
                 Invoice i = new Invoice();
                 i.setId(rs.getInt("id"));
-                i.setCustomer_Id(rs.getString("customer_id"));
+                i.setCustomer_Id(rs.getInt("customer_id"));
                 i.setCreated_At(rs.getDate("created_at").toLocalDate());
                 i.setTotal_Amount(rs.getDouble("total_amount"));
                 list.add(i);
@@ -103,7 +101,7 @@ public class InvoiceDaoImp implements InvoiceDao {
     }
 
     @Override
-    public List<Invoice> searchByDate(String date) {
+    public List<Invoice> searchByDate(LocalDate date) {
         List<Invoice> list = new ArrayList<>();
         Connection conn = null;
         CallableStatement callSt = null;
@@ -112,13 +110,13 @@ public class InvoiceDaoImp implements InvoiceDao {
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call PROC_SEARCH_INVOICE_BY_DATE(?)}");
-            callSt.setString(1, date);
+            callSt.setDate(1, Date.valueOf(date));
             rs = callSt.executeQuery();
 
             while (rs.next()) {
                 Invoice i = new Invoice();
                 i.setId(rs.getInt("id"));
-                i.setCustomer_Id(rs.getString("customer_id"));
+                i.setCustomer_Id(rs.getInt("customer_id"));
                 i.setCreated_At(rs.getDate("created_at").toLocalDate());
                 i.setTotal_Amount(rs.getDouble("total_amount"));
                 list.add(i);
@@ -129,5 +127,37 @@ public class InvoiceDaoImp implements InvoiceDao {
             ConnectionDB.closeConnection(conn, callSt);
         }
         return list;
+    }
+
+    @Override
+    public List<Object[]> getRevenueByDay() {
+        return getRevenueByQuery("CALL PROC_REVENUE_BY_DAY()");
+    }
+
+    @Override
+    public List<Object[]> getRevenueByMonth() {
+        return getRevenueByQuery("CALL PROC_REVENUE_BY_MONTH()");
+    }
+
+    @Override
+    public List<Object[]> getRevenueByYear() {
+        return getRevenueByQuery("CALL PROC_REVENUE_BY_YEAR()");
+    }
+
+    private List<Object[]> getRevenueByQuery(String query) {
+        List<Object[]> result = new ArrayList<>();
+        try (Connection conn = ConnectionDB.openConnection();
+             CallableStatement cs = conn.prepareCall(query);
+             ResultSet rs = cs.executeQuery()) {
+            while (rs.next()) {
+                Object[] row = new Object[2];
+                row[0] = rs.getString(1); // ngày / tháng / năm
+                row[1] = rs.getDouble(2); // tổng doanh thu
+                result.add(row);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

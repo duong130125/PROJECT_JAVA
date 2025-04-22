@@ -4,6 +4,7 @@ import ra.edu.business.dao.invoice.InvoiceDao;
 import ra.edu.business.dao.invoice.InvoiceDaoImp;
 import ra.edu.business.model.Invoice;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class InvoiceServiceImp implements InvoiceService {
@@ -36,7 +37,22 @@ public class InvoiceServiceImp implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> searchByDate(String date) {
+    public List<Invoice> searchByDate(LocalDate date) {
         return invoiceDao.searchByDate(date);
+    }
+
+    @Override
+    public List<Object[]> getRevenueByDay() {
+        return invoiceDao.getRevenueByDay();
+    }
+
+    @Override
+    public List<Object[]> getRevenueByMonth() {
+        return invoiceDao.getRevenueByMonth();
+    }
+
+    @Override
+    public List<Object[]> getRevenueByYear() {
+        return invoiceDao.getRevenueByYear();
     }
 }

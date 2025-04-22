@@ -58,7 +58,7 @@ public class MainApplication {
                     break;
                 case 4:
                     System.out.println("Bắt đầu vào trang quản lý thống kê!!!");
-                    StatisticUI.displayStatisticMenu();
+                    StatisticUI.displayStatisticMenu(scanner);
                     break;
                 case 5:
                     System.out.println(">> Đã đăng xuất. Quay lại trang đăng nhập!");
