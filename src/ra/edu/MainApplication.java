@@ -54,7 +54,7 @@ public class MainApplication {
                     break;
                 case 3:
                     System.out.println("Bắt đầu vào trang quản lý hóa đơn!!!");
-                    InvoiceUI.displayInvoiceMenu();
+                    InvoiceUI.displayInvoiceMenu(scanner);
                     break;
                 case 4:
                     System.out.println("Bắt đầu vào trang quản lý thống kê!!!");
