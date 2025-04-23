@@ -13,16 +13,18 @@ public class Customer implements IApp {
     private String phone;
     private String email;
     private String address;
+    private boolean status;
 
     public Customer() {
     }
 
-    public Customer(int id, String name, String phone, String email, String address) {
+    public Customer(int id, String name, String phone, String email, String address, boolean status) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.status = status;
     }
 
     public int getId() {
@@ -65,10 +67,18 @@ public class Customer implements IApp {
         this.address = address;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     @Override
     public void inputData(Scanner scanner) {
         this.name = Validator.validateString(scanner,"Nhập vào tên của khách hàng: ",1, 100);
-        this.phone = Validator.validatePhone(scanner, "Nhập vào số điện thoại của khách hàng: ");
+        this.phone = inputCustomerPhone(scanner);
         this.email = inputCustomerEmail(scanner);
         this.address = Validator.validateString(scanner, "Nhập vào địa chỉ của khách hàng: ", 1, 225);
     }
@@ -76,6 +86,11 @@ public class Customer implements IApp {
     public String inputCustomerEmail(Scanner scanner) {
         String customerEmail = Validator.validateEmail(scanner, "Nhập vào email của khách hàng: ");
         return CustomerValidator.isEmailUnique(scanner, customerEmail);
+    }
+
+    public String inputCustomerPhone(Scanner scanner) {
+        String customerPhone =  Validator.validatePhone(scanner, "Nhập vào số điện thoại của khách hàng: ");
+        return CustomerValidator.isPhoneUnique(scanner, customerPhone);
     }
 
     @Override

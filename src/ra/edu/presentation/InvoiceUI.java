@@ -51,17 +51,15 @@ public class InvoiceUI {
     }
 
     public static void addNewInvoice(Scanner scanner) {
-        int size = Validator.validateInt(scanner, "Nhập vào số hóa đơn cần thêm mới: ");
-        for (int i = 0; i < size; i++) {
-            System.out.println("== Nhập thông tin hóa đơn thứ " + (i + 1) + " ==");
-            Invoice invoice = new Invoice();
-            invoice.inputData(scanner);
-            boolean result = invoiceService.save(invoice);
-            if (result) {
-                System.out.println("Thêm mới hóa đơn thành công.");
-            } else {
-                System.err.println("Có lỗi trong quá trình thêm hóa đơn.");
-            }
+        System.out.println("=== Nhập thông tin hóa đơn mới ===");
+        Invoice invoice = new Invoice();
+        invoice.inputData(scanner);
+
+        boolean result = invoiceService.save(invoice);
+        if (result) {
+            System.out.println("Thêm mới hóa đơn thành công.");
+        } else {
+            System.err.println("Có lỗi trong quá trình thêm hóa đơn.");
         }
     }
 
@@ -71,7 +69,7 @@ public class InvoiceUI {
             System.out.println("\n----- TÌM KIẾM HÓA ĐƠN -----");
             System.out.println("1. Theo tên khách hàng");
             System.out.println("2. Theo ngày xuất hóa đơn (YYYY-MM-DD)");
-            System.out.println("3. Quay lại");
+            System.out.println("3. Quay lại menu quản lý hóa đơn");
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
             switch (choice) {
                 case 1:

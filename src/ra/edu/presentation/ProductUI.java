@@ -58,6 +58,9 @@ public class ProductUI {
     public static void displayListProducts() {
         System.out.println("========== DANH SÁCH SẢN PHẨM ==========");
         List<Product> listProducts = productService.findAll();
+        if (listProducts.isEmpty()) {
+            System.out.println("Không có sản phẩm nào trên hệ thống. Vui lòng thêm mới sản phẩm.");
+        }
         listProducts.forEach(System.out::println);
     }
 
@@ -78,19 +81,45 @@ public class ProductUI {
 
     public static void updateProduct(Scanner scanner) {
         int productId = Validator.validateInt(scanner, "Nhập vào mã sản phẩm cần cập nhật: ");
-        if (productService.findById(productId) != null) {
-            Product product = new Product();
-            product.setId(productId);
-            product.inputData(scanner);
-            boolean result = productService.update(product);
-            if (result) {
-                System.out.println("Cập nhật thành công sản phẩm");
-                displayListProducts();
-            } else {
-                System.err.println("Có lỗi trong quá trình cập nhật");
-            }
+        Product product = productService.findById(productId);
+
+        if (product != null) {
+            do {
+                System.out.println("\n===== CHỌN THÔNG TIN MUỐN CẬP NHẬT =====");
+                System.out.println("1. Cập nhật tên sản phẩm.");
+                System.out.println("2. Cập nhật giá sản phẩm.");
+                System.out.println("3. Cập nhật số lượng tồn kho sản phẩm.");
+                System.out.println("4. Cập nhật thương hiệu sản phẩm.");
+                System.out.println("5. Hoàn tất và lưu thay đổi");
+                int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
+                switch (choice) {
+                    case 1:
+                        product.setName(Validator.validateString(scanner, "Nhập vào tên mới của sản phẩm: ", 1, 100));
+                        break;
+                    case 2:
+                        product.setPrice(Validator.validateDouble(scanner, "Nhập vào giá mới của sản phẩm: "));
+                        break;
+                    case 3:
+                        product.setStock(Validator.validateInt(scanner, "Nhập vào số lượng tồn kho mới của sản phẩm: "));
+                        break;
+                    case 4:
+                        product.setBrand(Validator.validateString(scanner, "Nhập vào thương hiệu mới của sản phẩm: ", 1, 50));
+                        break;
+                    case 5:
+                        boolean result = productService.update(product);
+                        if (result) {
+                            System.out.println("Cập nhật sản phẩm thành công!");
+                            displayListProducts();
+                        } else {
+                            System.err.println("Có lỗi trong quá trình cập nhật");
+                        }
+                        return;
+                    default:
+                        System.out.println("Lựa chọn không hợp lệ, vui lòng chọn từ 1->5!!!");
+                }
+            } while (true);
         } else {
-            System.err.println("Không tồn tại mã sản phẩm");
+            System.err.println("Mã sản phẩm vừa nhập không tồn tại, vui lòng nhập mã sản phẩm phù hợp.");
         }
     }
 
@@ -129,6 +158,9 @@ public class ProductUI {
         double minPrice = Validator.validateDouble(scanner, "Nhập giá tối thiểu: ");
         double maxPrice = Validator.validateDouble(scanner, "Nhập giá tối đa: ");
 
+        if (minPrice > maxPrice) {
+            System.err.println("Lỗi: Giá tối thiểu không được lớn hơn giá tối đa. Vui lòng nhập lại!");
+        }
         List<Product> products = productService.findByPriceRange(minPrice, maxPrice);
 
         if (!products.isEmpty()) {
@@ -145,6 +177,9 @@ public class ProductUI {
         int minStock = Validator.validateInt(scanner, "Nhập số lượng tồn kho tối thiểu: ");
         int maxStock = Validator.validateInt(scanner, "Nhập số lượng tồn kho tối đa: ");
 
+        if (minStock > maxStock) {
+            System.err.println("Lỗi: Số lượng tối thiểu không được lớn hơn số lượng tối đa. Vui lòng nhập lại!");
+        }
         List<Product> products = productService.findByStock(minStock, maxStock);
 
         if (!products.isEmpty()) {
@@ -156,5 +191,4 @@ public class ProductUI {
             System.out.println("Không tìm thấy sản phẩm nào có tồn kho trong khoảng này");
         }
     }
-
 }

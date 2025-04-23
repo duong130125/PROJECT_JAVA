@@ -24,7 +24,8 @@ public class ProductDaoImp implements ProductDao {
                         rs.getString("name"),
                         rs.getString("brand"),
                         rs.getDouble("price"),
-                        rs.getInt("stock")
+                        rs.getInt("stock"),
+                        rs.getBoolean("status")
                 );
                 products.add(p);
             }
@@ -42,7 +43,8 @@ public class ProductDaoImp implements ProductDao {
             call.setString(2, product.getBrand());
             call.setDouble(3, product.getPrice());
             call.setInt(4, product.getStock());
-            return call.executeUpdate() > 0;
+            call.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,7 +60,8 @@ public class ProductDaoImp implements ProductDao {
             call.setString(3, product.getBrand());
             call.setDouble(4, product.getPrice());
             call.setInt(5, product.getStock());
-            return call.executeUpdate() > 0;
+            call.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -70,7 +73,8 @@ public class ProductDaoImp implements ProductDao {
         try (Connection conn = ConnectionDB.openConnection();
              CallableStatement call = conn.prepareCall("{CALL PROC_DELETE_PRODUCT(?)}")) {
             call.setInt(1, product.getId());
-            return call.executeUpdate() > 0;
+            call.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -95,6 +99,7 @@ public class ProductDaoImp implements ProductDao {
                 product.setBrand(rs.getString("brand"));
                 product.setPrice(rs.getDouble("price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
             }
         } catch (SQLException e) {
             e.fillInStackTrace();
@@ -120,7 +125,7 @@ public class ProductDaoImp implements ProductDao {
             ResultSet rs = call.executeQuery();
             while (rs.next()) {
                 list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
-                        rs.getDouble("price"), rs.getInt("stock")));
+                        rs.getDouble("price"), rs.getInt("stock"), rs.getBoolean("status")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -138,7 +143,7 @@ public class ProductDaoImp implements ProductDao {
             ResultSet rs = call.executeQuery();
             while (rs.next()) {
                 list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
-                        rs.getDouble("price"), rs.getInt("stock")));
+                        rs.getDouble("price"), rs.getInt("stock"), rs.getBoolean("status")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -166,6 +171,7 @@ public class ProductDaoImp implements ProductDao {
                 product.setBrand(rs.getString("brand"));
                 product.setPrice(rs.getDouble("price"));
                 product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
                 productList.add(product);
             }
 

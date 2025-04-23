@@ -18,7 +18,7 @@ public class LoginAdminUI {
             boolean isLoginSuccess = adminService.loginAdmin(username, password);
 
             if (isLoginSuccess) {
-                System.out.println(">> Đăng nhập thành công. Vào trang quản lý!");
+                System.out.printf(">> Đăng nhập thành công. Vào trang quản lý với Tài khoản: %s!!!\n", username);
                 return true;
             } else {
                 System.out.println(">> Sai tài khoản hoặc mật khẩu. Đăng nhập lại!");

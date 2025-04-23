@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class InvoiceValidator {
-    static CustomerService customerService = new CustomerServiceImp();
-    static List<Customer> listCustomer = customerService.findAll();
+    private static final CustomerService customerService = new CustomerServiceImp();
+
     public static int validateCustomerExists(Scanner scanner, int customerId) {
+        List<Customer> listCustomer = customerService.findAll();
         do {
             boolean exists = false;
             for (Customer customer : listCustomer) {

@@ -59,7 +59,6 @@ public class Invoice implements IApp {
     public void inputData(Scanner scanner) {
         this.customer_Id = inputInvoiceId(scanner);
         this.created_At = LocalDate.now();
-        this.total_Amount = Validator.validateDouble(scanner, "Nhập vào tổng tiền của hóa đơn: ");
     }
 
     public Integer inputInvoiceId(Scanner scanner) {

@@ -10,18 +10,20 @@ public class Product implements IApp {
     private int id;
     private String name;
     private String brand;
-    private Double price;
+    private double price;
     private int stock;
+    private boolean status;
 
     public Product() {
     }
 
-    public Product(int id, String name, String brand, Double price, int stock) {
+    public Product(int id, String name, String brand, double price, int stock, boolean status) {
         this.id = id;
         this.name = name;
         this.brand = brand;
         this.price = price;
         this.stock = stock;
+        this.status = status;
     }
 
     public int getId() {
@@ -48,11 +50,11 @@ public class Product implements IApp {
         this.brand = brand;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -62,6 +64,14 @@ public class Product implements IApp {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     @Override
