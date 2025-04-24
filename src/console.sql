@@ -13,11 +13,12 @@ CREATE TABLE admin
 -- 2. Tạo bảng Product (Sản phẩm)
 CREATE TABLE product
 (
-    id    INT PRIMARY KEY AUTO_INCREMENT,
-    name  VARCHAR(100)                      NOT NULL,
-    brand VARCHAR(50)                       NOT NULL,
-    price DECIMAL(12, 2) check ( 0 < price) NOT NULL,
-    stock INT check ( 0 <= stock)           NOT NULL
+    id     INT PRIMARY KEY AUTO_INCREMENT,
+    name   VARCHAR(100)                      NOT NULL,
+    brand  VARCHAR(50)                       NOT NULL,
+    price  DECIMAL(12, 2) check ( 0 < price) NOT NULL,
+    stock  INT check ( 0 <= stock)           NOT NULL,
+    status boolean default (true)
 );
 
 -- 3. Tạo bảng Customer (Khách hàng)
@@ -27,7 +28,8 @@ CREATE TABLE customer
     name    VARCHAR(100)        NOT NULL,
     phone   VARCHAR(20)         NULL,
     email   VARCHAR(100) UNIQUE NULL,
-    address VARCHAR(255)        NULL
+    address VARCHAR(255)        NULL,
+    status  boolean default (true)
 );
 
 -- 4. Tạo bảng Invoice (Hóa đơn)
@@ -52,6 +54,7 @@ CREATE TABLE invoice_details
     FOREIGN KEY (product_id) REFERENCES product (id)
 );
 
+-- Tài khoản đăng nhập
 insert into admin(username, password)
 values ('duongdinh', '13012005');
 
@@ -75,7 +78,10 @@ END;
 -- Hiển thị danh sách
 CREATE PROCEDURE PROC_GET_ALL_PRODUCT()
 BEGIN
-    SELECT * FROM product;
+    SELECT *
+    FROM product
+    where status = true
+      and stock > 0;
 END;
 
 -- Cập nhật sản phẩm
@@ -88,7 +94,9 @@ END;
 -- Xóa sản phẩm
 CREATE PROCEDURE PROC_DELETE_PRODUCT(IN p_id INT)
 BEGIN
-    DELETE FROM product WHERE id = p_id;
+    update product
+    set status = false
+    where id = p_id;
 END;
 
 -- Lấy id sản phẩm
@@ -122,7 +130,9 @@ DELIMITER //
 -- Lấy tất cả khách hàng
 CREATE PROCEDURE PROC_GET_ALL_CUSTOMERS()
 BEGIN
-    SELECT * FROM customer;
+    SELECT *
+    FROM customer
+    where status = true;
 END;
 
 -- Thêm mới khách hàng
@@ -142,7 +152,9 @@ END;
 -- Xoá khách hàng
 CREATE PROCEDURE PROC_DELETE_CUSTOMER(IN cid INT)
 BEGIN
-    DELETE FROM customer WHERE id = cid;
+    update customer
+    set status = false
+    WHERE id = cid;
 END;
 
 -- Tìm theo ID khách hàng
@@ -164,12 +176,15 @@ END;
 -- Thêm mới hóa đơn
 CREATE PROCEDURE PROC_INSERT_INVOICE(
     IN p_customer_id INT,
-    IN p_created_at DATETIME,
-    IN p_total_amount DECIMAL(12, 2)
+    IN p_created_at DATE,
+    IN p_total_amount DOUBLE,
+    OUT p_invoice_id INT
 )
 BEGIN
-    INSERT INTO invoice (customer_id, created_at, total_amount)
+    INSERT INTO invoice(customer_id, created_at, total_amount)
     VALUES (p_customer_id, p_created_at, p_total_amount);
+
+    SET p_invoice_id = LAST_INSERT_ID(); -- Lấy id vừa thêm
 END;
 
 -- Tìm kiếm hóa đơn theo Tên khách hàng
@@ -191,6 +206,62 @@ BEGIN
     SELECT *
     FROM invoice
     WHERE DATE(created_at) = p_date;
+END;
+//
+DELIMITER ;
+
+-- *****Phần chi tiết hóa đơn và Thống kê*****
+DELIMITER //
+-- Hiện thị chi tiết hóa đơn
+CREATE PROCEDURE PROC_GET_ALL_INVOICE_DETAIL()
+BEGIN
+    SELECT id, invoice_id, product_id, quantity, unit_price
+    FROM invoice_details;
+END;
+
+-- Thêm mới chi tiết hóa đơn
+CREATE PROCEDURE PROC_INSERT_INVOICE_DETAIL(
+    IN p_invoice_id INT,
+    IN p_product_id INT,
+    IN p_quantity INT
+)
+BEGIN
+    DECLARE v_unit_price DECIMAL(12,2);
+    DECLARE v_stock INT;
+
+    -- Lấy giá và tồn kho của sản phẩm
+    SELECT price, stock INTO v_unit_price, v_stock
+    FROM product
+    WHERE id = p_product_id;
+
+    -- Kiểm tra tồn kho
+    IF v_stock >= p_quantity THEN
+        -- Trừ số lượng khỏi kho
+        UPDATE product
+        SET stock = stock - p_quantity
+        WHERE id = p_product_id;
+
+        -- Thêm chi tiết hóa đơn
+        INSERT INTO invoice_details(invoice_id, product_id, quantity, unit_price)
+        VALUES (p_invoice_id, p_product_id, p_quantity, v_unit_price);
+
+        -- Cập nhật tổng tiền hóa đơn
+        UPDATE invoice
+        SET total_amount = total_amount + (v_unit_price * p_quantity)
+        WHERE id = p_invoice_id;
+
+    ELSE
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Số lượng trong kho không đủ, vui lòng đợi trong giây lát!';
+    END IF;
+END;
+
+-- Lấy chi tiết hóa đơn theo invoice_id
+CREATE PROCEDURE get_invoice_detail_by_invoice_id(IN p_invoice_id INT)
+BEGIN
+    SELECT *
+    FROM invoice_details
+    WHERE invoice_id = p_invoice_id;
 END;
 
 -- Tổng doanh thu theo ngày
@@ -221,4 +292,3 @@ BEGIN
 END;
 //
 DELIMITER ;
-
