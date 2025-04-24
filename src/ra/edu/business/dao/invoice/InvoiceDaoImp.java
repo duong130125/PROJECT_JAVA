@@ -40,25 +40,34 @@ public class InvoiceDaoImp implements InvoiceDao {
 
     @Override
     public boolean save(Invoice invoice) {
-        boolean result = false;
         Connection conn = null;
         CallableStatement callSt = null;
+        boolean isSuccess = false;
 
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call PROC_INSERT_INVOICE(?, ?, ?)}");
+            callSt = conn.prepareCall("{CALL PROC_INSERT_INVOICE(?, ?, ?, ?)}");
+
             callSt.setInt(1, invoice.getCustomer_Id());
-            java.sql.Date sqlDate = java.sql.Date.valueOf(invoice.getCreated_At());
-            callSt.setDate(2, sqlDate);
+            callSt.setDate(2, java.sql.Date.valueOf(invoice.getCreated_At()));
             callSt.setDouble(3, invoice.getTotal_Amount());
-            result = callSt.executeUpdate() > 0;
+            callSt.registerOutParameter(4, Types.INTEGER); // OUT param
+
+            isSuccess = callSt.executeUpdate() > 0;
+
+            if (isSuccess) {
+                int invoiceId = callSt.getInt(4);
+                invoice.setId(invoiceId); // gán lại cho object
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             ConnectionDB.closeConnection(conn, callSt);
         }
-        return result;
+
+        return isSuccess;
     }
+
 
     @Override
     public boolean update(Invoice invoice) {
@@ -72,7 +81,7 @@ public class InvoiceDaoImp implements InvoiceDao {
 
 
     @Override
-    public List<Invoice> searchByCustomerName(String keyword) {
+    public List<Invoice> searchByCustomerName(String cusName) {
         List<Invoice> list = new ArrayList<>();
         Connection conn = null;
         CallableStatement callSt = null;
@@ -81,7 +90,7 @@ public class InvoiceDaoImp implements InvoiceDao {
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call PROC_SEARCH_INVOICE_BY_NAME(?)}");
-            callSt.setString(1, "%" + keyword + "%");
+            callSt.setString(1, "%" + cusName + "%");
             rs = callSt.executeQuery();
 
             while (rs.next()) {

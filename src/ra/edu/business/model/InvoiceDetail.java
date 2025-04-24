@@ -1,6 +1,12 @@
 package ra.edu.business.model;
 
-public class InvoiceDetail {
+import ra.edu.utils.IApp;
+import ra.edu.validate.InvoiceDtValidator;
+import ra.edu.validate.Validator;
+
+import java.util.Scanner;
+
+public class InvoiceDetail implements IApp {
     private int id;
     private int invoiceId;
     private int productId;
@@ -56,5 +62,16 @@ public class InvoiceDetail {
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    @Override
+    public void inputData(Scanner scanner) {
+        this.productId = inputInvDtProduceId(scanner);
+        this.quantity = Validator.validateInt(scanner, "Nhập số lượng sản phẩm muốn thêm: ");
+    }
+
+    public Integer inputInvDtProduceId(Scanner scanner) {
+        int produceId = Validator.validateInt(scanner, "Nhập vào mã sản phẩm muốn thêm: ");
+        return InvoiceDtValidator.validateProductExists(scanner, produceId);
     }
 }

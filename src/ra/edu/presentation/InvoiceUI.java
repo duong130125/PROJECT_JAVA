@@ -18,7 +18,8 @@ public class InvoiceUI {
             System.out.println("1. Hiển thị danh sách hóa đơn");
             System.out.println("2. Thêm mới hóa đơn");
             System.out.println("3. Tìm kiếm hóa đơn");
-            System.out.println("4. Quay lại menu chính");
+            System.out.println("4. Xem hóa đơn chi tiết");
+            System.out.println("5. Quay lại menu chính");
             System.out.println("====================================");
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
             switch (choice) {
@@ -32,6 +33,9 @@ public class InvoiceUI {
                     searchInvoiceMenu(scanner);
                     break;
                 case 4:
+                    InvoiceDetailUI.displayInvoiceDetailMenu(scanner);
+                    break;
+                case 5:
                     System.out.println("Quay lại menu chính...");
                     return;
                 default:
@@ -52,17 +56,20 @@ public class InvoiceUI {
 
     public static void addNewInvoice(Scanner scanner) {
         System.out.println("=== Nhập thông tin hóa đơn mới ===");
+
         Invoice invoice = new Invoice();
         invoice.inputData(scanner);
 
         boolean result = invoiceService.save(invoice);
+
         if (result) {
-            System.out.println("Thêm mới hóa đơn thành công.");
+            System.out.println("Thêm mới hóa đơn thành công. Mã hóa đơn: " + invoice.getId());
+            System.out.println("==== Nhập chi tiết hóa đơn ====");
+            InvoiceDetailUI.addInvoiceDetail(scanner, invoice.getId());
         } else {
             System.err.println("Có lỗi trong quá trình thêm hóa đơn.");
         }
     }
-
 
     private static void searchInvoiceMenu(Scanner scanner) {
         do {
@@ -91,7 +98,7 @@ public class InvoiceUI {
         String cusName = Validator.validateString(scanner, "Nhập tên khách hàng cần tìm: ", 1, 100);
         List<Invoice> result = invoiceService.searchByCustomerName(cusName);
         if (result.isEmpty()) {
-            System.out.println("Không tìm thấy hóa đơn nào phù hợp.");
+            System.out.printf("Không tìm thấy hóa đơn nào với khách tên là:  %s\n.", cusName);
         } else {
             System.out.println("====== KẾT QUẢ TÌM KIẾM ======");
             for (Invoice i : result) {

@@ -35,7 +35,7 @@ public class CustomerUI {
                     deleteCustomer(scanner);
                     break;
                 case 5:
-                    System.out.println("Quay lại menu chính");
+                    System.out.println("Quay lại menu chính...");
                     return;
                 default:
                     System.err.println("Lựa chọn không hợp lệ. Vui lòng chọn từ 1-5!");

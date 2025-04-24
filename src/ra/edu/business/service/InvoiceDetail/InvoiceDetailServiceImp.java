@@ -28,4 +28,9 @@ public class InvoiceDetailServiceImp implements InvoiceDetailService {
     public boolean delete(InvoiceDetail invoiceDetail) {
         return false;
     }
+
+    @Override
+    public List<InvoiceDetail> findByInvoiceId(int invoiceId) {
+        return invoiceDetailDao.findByInvoiceId(invoiceId);
+    }
 }

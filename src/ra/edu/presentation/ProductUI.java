@@ -47,7 +47,7 @@ public class ProductUI {
                     searchByStock(scanner);
                     break;
                 case 8:
-                    System.out.println("Quay lại menu chính");
+                    System.out.println("Quay lại menu chính...");
                     return;
                 default:
                     System.err.println("Lựa chọn không hợp lệ. Vui lòng chọn từ 1-8!");

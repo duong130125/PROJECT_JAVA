@@ -28,6 +28,7 @@ public class InvoiceValidator {
                 for (Customer customer : listCustomer) {
                     System.out.println("ID: " + customer.getId() + " - " + customer.getName());
                 }
+                System.out.print("Nhập lại mã khách hàng: ");
                 customerId = scanner.nextInt();
             } else {
                 break;
