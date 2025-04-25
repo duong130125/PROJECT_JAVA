@@ -112,8 +112,20 @@ public class ProductDaoImp implements ProductDao {
     }
 
     @Override
-    public Product findByName(String name) {
-        return null;
+    public List<Product> findByName(String name) {
+        List<Product> list = new ArrayList<>();
+        try (Connection conn = ConnectionDB.openConnection();
+             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_PRO_NAME(?)}")) {
+            call.setString(1, name);
+            ResultSet rs = call.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
+                        rs.getDouble("price"), rs.getInt("stock"), rs.getBoolean("status")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     @Override

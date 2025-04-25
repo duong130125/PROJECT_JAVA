@@ -18,10 +18,11 @@ public class ProductUI {
             System.out.println("2. Thêm sản phẩm mới");
             System.out.println("3. Cập nhật thông tin sản phẩm");
             System.out.println("4. Xóa sản phẩm theo ID");
-            System.out.println("5. Tìm kiếm theo Brand");
-            System.out.println("6. Tìm kiếm theo khoảng giá");
-            System.out.println("7. Tìm kiếm theo tồn kho");
-            System.out.println("8. Quay lại menu chính");
+            System.out.println("5. Tìm kiếm theo tên sản phẩm");
+            System.out.println("6. Tìm kiếm theo Brand");
+            System.out.println("7. Tìm kiếm theo khoảng giá");
+            System.out.println("8. Tìm kiếm theo tồn kho");
+            System.out.println("9. Quay lại menu chính");
             System.out.println("=====================================");
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
             switch (choice) {
@@ -38,15 +39,18 @@ public class ProductUI {
                     deleteProduct(scanner);
                     break;
                 case 5:
-                    searchByBrand(scanner);
+                    searchByProName(scanner);
                     break;
                 case 6:
-                    searchByPriceRange(scanner);
+                    searchByBrand(scanner);
                     break;
                 case 7:
-                    searchByStock(scanner);
+                    searchByPriceRange(scanner);
                     break;
                 case 8:
+                    searchByStock(scanner);
+                    break;
+                case 9:
                     System.out.println("Quay lại menu chính...");
                     return;
                 default:
@@ -137,6 +141,20 @@ public class ProductUI {
             }
         } else {
             System.err.println("Mã sản phẩm không tồn tại");
+        }
+    }
+
+    public static void searchByProName(Scanner scanner) {
+        String name = Validator.validateString(scanner, "Nhập tên sản phẩm muốn tìm: ", 1, 100);
+        List<Product> products = productService.findByName(name);
+
+        if (!products.isEmpty()) {
+            System.out.println("Danh sách sản phẩm thuộc tên " + name + ":");
+            for (Product product : products) {
+                System.out.println(product);
+            }
+        } else {
+            System.out.println("Không tìm thấy sản phẩm nào thuộc tên: " + name);
         }
     }
 

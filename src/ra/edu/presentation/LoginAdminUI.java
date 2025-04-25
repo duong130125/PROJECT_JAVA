@@ -1,8 +1,8 @@
 package ra.edu.presentation;
 
+import ra.edu.business.model.Admin;
 import ra.edu.business.service.admin.AdminService;
 import ra.edu.business.service.admin.AdminServiceImp;
-import ra.edu.validate.Validator;
 
 import java.util.Scanner;
 
@@ -11,12 +11,12 @@ public class LoginAdminUI {
     public static boolean LoginAdminMenu(Scanner scanner) {
         do {
             System.out.println("========== ĐĂNG NHẬP QUẢN TRỊ ==========");
-            String username = Validator.validateString(scanner, "Tài khoản: ", 1, 50);
-
-            String password = Validator.validateString(scanner, "Mật Khẩu: ", 1, 225);
+            Admin admin = new Admin();
+            admin.inputData(scanner);
+            String username = admin.getUsername();
+            String password = admin.getPassword();
 
             boolean isLoginSuccess = adminService.loginAdmin(username, password);
-
             if (isLoginSuccess) {
                 System.out.printf(">> Đăng nhập thành công. Vào trang quản lý với Tài khoản: %s!!!\n", username);
                 return true;

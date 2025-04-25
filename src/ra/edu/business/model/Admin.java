@@ -1,6 +1,11 @@
 package ra.edu.business.model;
 
-public class Admin {
+import ra.edu.utils.IApp;
+import ra.edu.validate.Validator;
+
+import java.util.Scanner;
+
+public class Admin implements IApp {
     private int id;
     private String username;
     private String password;
@@ -36,5 +41,12 @@ public class Admin {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public void inputData(Scanner scanner) {
+        this.username = Validator.validateString(scanner, "Tài khoản: ", 1, 50);
+
+        this.password = Validator.validateString(scanner, "Mật Khẩu: ", 1, 225);
     }
 }

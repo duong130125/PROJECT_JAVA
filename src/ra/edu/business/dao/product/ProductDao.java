@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ProductDao extends AppDao<Product> {
     Product findById(int id);
-    Product findByName(String name);
 
+    List<Product> findByName(String name);
     List<Product> findByBrand(String brand);
     List<Product> findByPriceRange(double min, double max);
     List<Product> findByStock(int minStock, int maxStock);
