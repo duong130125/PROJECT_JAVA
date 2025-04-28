@@ -2,6 +2,7 @@ package ra.edu.business.dao.customer;
 
 import ra.edu.business.config.ConnectionDB;
 import ra.edu.business.model.Customer;
+import ra.edu.business.model.Product;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -144,7 +145,19 @@ public class CustomerDaoImp implements CustomerDao {
     }
 
     @Override
-    public Customer findByName(String name) {
-        return null;
+    public List<Customer> findByName(String name) {
+        List<Customer> list = new ArrayList<>();
+        try (Connection conn = ConnectionDB.openConnection();
+             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_CUS_NAME(?)}")) {
+            call.setString(1, name);
+            ResultSet rs = call.executeQuery();
+            while (rs.next()) {
+                list.add(new Customer(rs.getInt("id"), rs.getString("name"), rs.getString("phone"),
+                        rs.getString("email"), rs.getString("address"), rs.getBoolean("status")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

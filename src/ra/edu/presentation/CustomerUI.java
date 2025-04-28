@@ -1,6 +1,7 @@
 package ra.edu.presentation;
 
 import ra.edu.business.model.Customer;
+import ra.edu.business.model.Product;
 import ra.edu.business.service.customer.CustomerService;
 import ra.edu.business.service.customer.CustomerServiceImp;
 import ra.edu.validate.Validator;
@@ -18,7 +19,8 @@ public class CustomerUI {
             System.out.println("2. Thêm khách hàng mới");
             System.out.println("3. Cập nhật thông tin khách hàng");
             System.out.println("4. Xóa khách hàng theo ID");
-            System.out.println("5. Quay lại menu chính");
+            System.out.println("5. Tìm kiếm theo tên khách hàng");
+            System.out.println("6. Quay lại menu chính");
             System.out.println("=======================================");
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
             switch (choice) {
@@ -35,6 +37,9 @@ public class CustomerUI {
                     deleteCustomer(scanner);
                     break;
                 case 5:
+                    searchByCusName(scanner);
+                    break;
+                case 6:
                     System.out.println("Quay lại menu chính...");
                     return;
                 default:
@@ -120,6 +125,20 @@ public class CustomerUI {
             }
         } else {
             System.err.println("Mã khách hàng không tồn tại");
+        }
+    }
+
+    public static void searchByCusName(Scanner scanner) {
+        String name = Validator.validateString(scanner, "Nhập tên sản phẩm muốn tìm: ", 1, 100);
+        List<Customer> customers = customerService.findByName(name);
+
+        if (!customers.isEmpty()) {
+            System.out.println("Danh sách Khách hàng thuộc tên " + name + ":");
+            for (Customer customer : customers) {
+                System.out.println(customer);
+            }
+        } else {
+            System.out.println("Không tìm thấy khách hàng nào thuộc tên: " + name);
         }
     }
 }

@@ -35,7 +35,7 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public Customer findByName(String name) {
-        return null;
+    public List<Customer> findByName(String name) {
+        return customerDao.findByName(name);
     }
 }
