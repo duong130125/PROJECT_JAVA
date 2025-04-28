@@ -14,7 +14,6 @@ public class InvoiceDetailUI {
         do {
             System.out.println("===== QUẢN LÝ CHI TIẾT HÓA ĐƠN =====");
             System.out.println("1. Hiển thị danh sách chi tiết hóa đơn");
-//            System.out.println("2. Thêm mới chi tiết hóa đơn");
             System.out.println("2. Quay lại menu hóa đơn");
             System.out.println("====================================");
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
@@ -22,9 +21,6 @@ public class InvoiceDetailUI {
                 case 1:
                     showInvoiceDetailsByInvoiceId(scanner);
                     break;
-//                case 2:
-//                    addInvoiceDetail(scanner);
-//                    break;
                 case 2:
                     System.out.println("Quay lại hóa đơn....");
                     return;
