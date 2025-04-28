@@ -17,23 +17,45 @@ public class InvoiceValidator {
             for (Customer customer : listCustomer) {
                 if (customer.getId() == customerId) {
                     exists = true;
-                    System.out.println("Khách hàng: " + customer.getName());
+                    System.out.println(Customer.getTableHeader());
+                    System.out.println(customer);
+                    System.out.println(Customer.getSeparatorLine());
                     break;
                 }
             }
 
             if (!exists) {
                 System.err.println("Mã khách hàng không tồn tại, vui lòng nhập lại");
-                System.out.println("Danh sách khách hàng hiện có:");
+                System.out.println("============= DANH SÁCH KHÁCH HÀNG ================");
+                System.out.println(Customer.getTableHeader());
                 for (Customer customer : listCustomer) {
-                    System.out.println("ID: " + customer.getId() + " - " + customer.getName());
+                    System.out.println(customer);
+                    System.out.println(Customer.getSeparatorLine());
                 }
                 System.out.print("Nhập lại mã khách hàng: ");
-                customerId = scanner.nextInt();
+                customerId = Integer.parseInt(scanner.nextLine());
             } else {
                 break;
             }
         } while (true);
         return customerId;
     }
+
+    public static boolean validateCustomerStatus(int customerId) {
+        Customer customer = customerService.findById(customerId);
+        if (customer != null) {
+            if (!customer.isStatus()) {
+                // Khách hàng đang hoạt động
+                System.out.println("Khách hàng đang hoạt động, có thể tiếp tục tạo hóa đơn.");
+                return true;
+            } else {
+                // Khách hàng đang không hoạt động
+                System.err.println("Khách hàng hiện không hoạt động, vui lòng chọn khách hàng khác.");
+                return false;
+            }
+        }
+        System.err.println("Không tìm thấy khách hàng với mã " + customerId);
+        return false;
+    }
+
 }

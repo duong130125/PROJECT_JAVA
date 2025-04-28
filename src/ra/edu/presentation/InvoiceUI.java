@@ -45,12 +45,16 @@ public class InvoiceUI {
     }
 
     private static void displayAllInvoices() {
-        List<Invoice> invoices = invoiceService.findAll();
-        if (invoices.isEmpty()) {
+        List<Invoice> invoicesList = invoiceService.findAll();
+        if (invoicesList.isEmpty()) {
             System.out.println("Không có hóa đơn nào trong hệ thống.");
         } else {
-            System.out.println("====== DANH SÁCH HÓA ĐƠN ======");
-            invoices.forEach(System.out::println);
+            System.out.println("========== DANH SÁCH HÓA ĐƠN ==========");
+            System.out.println(Invoice.getTableHeader());
+            for (Invoice invoice : invoicesList) {
+                System.out.println(invoice);
+                System.out.println(Invoice.getSeparatorLine());
+            }
         }
     }
 

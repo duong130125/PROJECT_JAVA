@@ -65,7 +65,11 @@ public class ProductUI {
         if (listProducts.isEmpty()) {
             System.out.println("Không có sản phẩm nào trên hệ thống. Vui lòng thêm mới sản phẩm.");
         }
-        listProducts.forEach(System.out::println);
+        System.out.println(Product.getTableHeader());
+        for (Product p : listProducts) {
+            System.out.println(p);
+            System.out.println(Product.getSeparatorLine());
+        }
     }
 
     public static void createProducts(Scanner scanner) {

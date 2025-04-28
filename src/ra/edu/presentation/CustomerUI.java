@@ -1,7 +1,6 @@
 package ra.edu.presentation;
 
 import ra.edu.business.model.Customer;
-import ra.edu.business.model.Product;
 import ra.edu.business.service.customer.CustomerService;
 import ra.edu.business.service.customer.CustomerServiceImp;
 import ra.edu.validate.Validator;
@@ -50,11 +49,15 @@ public class CustomerUI {
 
     public static void showCustomerAll() {
         System.out.println("========== DANH SÁCH KHÁCH HÀNG ==========");
-        List<Customer> list = customerService.findAll();
-        if (list.isEmpty()) {
+        List<Customer> listCustomer = customerService.findAll();
+        if (listCustomer.isEmpty()) {
             System.out.println("Không có khách hàng nào trong DB.");
         } else {
-            list.forEach(System.out::println);
+            System.out.println(Customer.getTableHeader());
+            for (Customer customer : listCustomer) {
+                System.out.println(customer);
+                System.out.println(Customer.getSeparatorLine());
+            }
         }
     }
 
@@ -113,7 +116,7 @@ public class CustomerUI {
     }
 
     public static void deleteCustomer(Scanner scanner) {
-        int customerId = Validator.validateInt(scanner, "Nhập mã sản phẩm cần xóa: ");
+        int customerId = Validator.validateInt(scanner, "Nhập mã Khách hàng cần xóa: ");
         if (customerService.findById(customerId) != null) {
             Customer customer = new Customer();
             customer.setId(customerId);
@@ -129,7 +132,7 @@ public class CustomerUI {
     }
 
     public static void searchByCusName(Scanner scanner) {
-        String name = Validator.validateString(scanner, "Nhập tên sản phẩm muốn tìm: ", 1, 100);
+        String name = Validator.validateString(scanner, "Nhập tên khách hàng muốn tìm: ", 1, 100);
         List<Customer> customers = customerService.findByName(name);
 
         if (!customers.isEmpty()) {

@@ -97,27 +97,18 @@ public class Product implements IApp {
     public static final String GREEN = "\u001B[32m";
     public static final String RED = "\u001B[31m";
 
-    // Max column widths (you can dynamically calculate this in real case)
+    // Max column widths
     private static final int WIDTH_ID = 10;
     private static final int WIDTH_NAME = 25;
     private static final int WIDTH_BRAND = 20;
     private static final int WIDTH_PRICE = 18;
     private static final int WIDTH_STOCK = 10;
 
-    private String formatProductData() {
-        return String.format("| " + GREEN + "%-" + WIDTH_ID + "s" + RESET + " | "
-                        + GREEN + "%-" + WIDTH_NAME + "s" + RESET + " | "
-                        + GREEN + "%-" + WIDTH_BRAND + "s" + RESET + " | "
-                        + RED + "%," + WIDTH_PRICE + ".2f" + RESET + " | "
-                        + GREEN + "%" + WIDTH_STOCK + "d" + RESET + " |",
-                id, name, brand, price, stock);
-    }
-
-    private static String repeat(char ch, int length) {
+    public static String repeat(char ch, int length) {
         return new String(new char[length]).replace('\0', ch);
     }
 
-    private static String getSeparatorLine() {
+    public static String getSeparatorLine() {
         return "+" + repeat('-', WIDTH_ID + 2)
                 + "+" + repeat('-', WIDTH_NAME + 2)
                 + "+" + repeat('-', WIDTH_BRAND + 2)
@@ -125,7 +116,7 @@ public class Product implements IApp {
                 + "+" + repeat('-', WIDTH_STOCK + 2) + "+";
     }
 
-    private static String getTableHeader() {
+    public static String getTableHeader() {
         return getSeparatorLine() + "\n" +
                 String.format("| " + YELLOW + "%-" + WIDTH_ID + "s" + RESET + " | "
                                 + YELLOW + "%-" + WIDTH_NAME + "s" + RESET + " | "
@@ -136,15 +127,17 @@ public class Product implements IApp {
                 getSeparatorLine();
     }
 
-    private static String getTableFooter() {
-        return getSeparatorLine();
+    public String formatProductData() {
+        return String.format("| " + GREEN + "%-" + WIDTH_ID + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_NAME + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_BRAND + "s" + RESET + " | "
+                        + RED + "%," + WIDTH_PRICE + ".2f" + RESET + " | "
+                        + GREEN + "%" + WIDTH_STOCK + "d" + RESET + " |",
+                id, name, brand, price, stock);
     }
 
     @Override
     public String toString() {
-        return getTableHeader() + "\n" +
-                formatProductData() + "\n" +
-                getTableFooter();
+        return formatProductData();
     }
-
 }

@@ -134,7 +134,6 @@ public class CustomerDaoImp implements CustomerDao {
                 customer.setPhone(rs.getString("phone"));
                 customer.setAddress(rs.getString("address"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -147,17 +146,31 @@ public class CustomerDaoImp implements CustomerDao {
     @Override
     public List<Customer> findByName(String name) {
         List<Customer> list = new ArrayList<>();
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_CUS_NAME(?)}")) {
-            call.setString(1, name);
-            ResultSet rs = call.executeQuery();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_FIND_BY_CUS_NAME(?)}");
+            callSt.setString(1, name);
+
+            ResultSet rs = callSt.executeQuery();
             while (rs.next()) {
-                list.add(new Customer(rs.getInt("id"), rs.getString("name"), rs.getString("phone"),
-                        rs.getString("email"), rs.getString("address"), rs.getBoolean("status")));
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("id"));
+                customer.setName(rs.getString("name"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setEmail(rs.getString("email"));
+                customer.setAddress(rs.getString("address"));
+                customer.setStatus(rs.getBoolean("status"));
+                list.add(customer);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
+
         return list;
     }
 }

@@ -13,7 +13,7 @@ public class InvoiceDetailUI {
     public static void displayInvoiceDetailMenu(Scanner scanner) {
         do {
             System.out.println("===== QUẢN LÝ CHI TIẾT HÓA ĐƠN =====");
-            System.out.println("1. Hiển thị danh sách chi tiết hóa đơn");
+            System.out.println("1. Xem chi tiết hóa đơn theo ID");
             System.out.println("2. Quay lại menu hóa đơn");
             System.out.println("====================================");
             int choice = Validator.validateInt(scanner, "Nhập lựa chọn của bạn: ");
@@ -33,32 +33,37 @@ public class InvoiceDetailUI {
     public static void showInvoiceDetailsByInvoiceId(Scanner  scanner) {
         int invoiceId = Validator.validateInt(scanner, "Nhập mã hóa đơn (invoice_id) muốn xem chi tiết: ");
 
-        List<InvoiceDetail> list = invoiceDetailService.findByInvoiceId(invoiceId);
-        if (list == null || list.isEmpty()) {
+        List<InvoiceDetail> listInvoiceDetail = invoiceDetailService.findByInvoiceId(invoiceId);
+        if (listInvoiceDetail == null || listInvoiceDetail.isEmpty()) {
             System.out.println("Không tìm thấy chi tiết hóa đơn nào cho mã hóa đơn ID = " + invoiceId);
         } else {
-            System.out.printf("%-5s %-10s %-10s %-10s %-10s\n", "ID", "InvoiceID", "ProductID", "Quantity", "UnitPrice");
-            for (InvoiceDetail detail : list) {
-                System.out.printf("%-5d %-10d %-10d %-10d %-10.2f\n",
-                        detail.getId(),
-                        detail.getInvoiceId(),
-                        detail.getProductId(),
-                        detail.getQuantity(),
-                        detail.getUnitPrice());
+            System.out.println(InvoiceDetail.getTableHeader());
+            for (InvoiceDetail invoiceDetail : listInvoiceDetail) {
+                System.out.println(invoiceDetail);
+                System.out.println(InvoiceDetail.getSeparatorLine());
             }
         }
     }
 
     public static void addInvoiceDetail(Scanner scanner, int invoiceId) {
-        InvoiceDetail detail = new  InvoiceDetail();
-        detail.setInvoiceId(invoiceId);
-        detail.inputData(scanner);
+        boolean continueAdding = true;
 
-        boolean result = invoiceDetailService.save(detail);
-        if (result) {
-            System.out.println("Thêm chi tiết hóa đơn thành công!");
-        } else {
-            System.out.println("Thêm thất bại. Vui lòng kiểm tra lại dữ liệu.");
+        while (continueAdding) {
+            InvoiceDetail detail = new InvoiceDetail();
+            detail.setInvoiceId(invoiceId);
+            detail.inputData(scanner);
+
+            boolean result = invoiceDetailService.save(detail);
+            if (result) {
+                System.out.println("Thêm chi tiết hóa đơn thành công!");
+            } else {
+                System.out.println("Thêm thất bại. Vui lòng kiểm tra lại dữ liệu.");
+            }
+
+            String choice = Validator.validateString(scanner, "Bạn có muốn thêm sản phẩm khác không? (Y/N): ", 1, 100);
+            continueAdding = choice.equals("Y");
         }
+
+        System.out.println("Đã hoàn thành việc thêm sản phẩm cho hóa đơn.");
     }
 }

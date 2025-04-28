@@ -15,12 +15,11 @@ public class InvoiceDaoImp implements InvoiceDao {
         List<Invoice> list = new ArrayList<>();
         Connection conn = null;
         CallableStatement callSt = null;
-        ResultSet rs = null;
 
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call PROC_FIND_ALL_INVOICES()}");
-            rs = callSt.executeQuery();
+            ResultSet rs = callSt.executeQuery();
 
             while (rs.next()) {
                 Invoice i = new Invoice();
@@ -85,13 +84,12 @@ public class InvoiceDaoImp implements InvoiceDao {
         List<Invoice> list = new ArrayList<>();
         Connection conn = null;
         CallableStatement callSt = null;
-        ResultSet rs = null;
 
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call PROC_SEARCH_INVOICE_BY_NAME(?)}");
             callSt.setString(1, "%" + cusName + "%");
-            rs = callSt.executeQuery();
+            ResultSet rs = callSt.executeQuery();
 
             while (rs.next()) {
                 Invoice i = new Invoice();
@@ -114,13 +112,12 @@ public class InvoiceDaoImp implements InvoiceDao {
         List<Invoice> list = new ArrayList<>();
         Connection conn = null;
         CallableStatement callSt = null;
-        ResultSet rs = null;
 
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call PROC_SEARCH_INVOICE_BY_DATE(?)}");
             callSt.setDate(1, Date.valueOf(date));
-            rs = callSt.executeQuery();
+            ResultSet rs = callSt.executeQuery();
 
             while (rs.next()) {
                 Invoice i = new Invoice();
@@ -155,9 +152,14 @@ public class InvoiceDaoImp implements InvoiceDao {
 
     private List<Object[]> getRevenueByQuery(String query) {
         List<Object[]> result = new ArrayList<>();
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement cs = conn.prepareCall(query);
-             ResultSet rs = cs.executeQuery()) {
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall(query);
+
+            ResultSet rs = callSt.executeQuery();
             while (rs.next()) {
                 Object[] row = new Object[2];
                 row[0] = rs.getString(1); // ngày / tháng / năm
@@ -166,7 +168,10 @@ public class InvoiceDaoImp implements InvoiceDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
+
         return result;
     }
 }

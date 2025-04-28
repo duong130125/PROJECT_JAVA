@@ -21,10 +21,10 @@ public class Validator {
             try {
                 System.out.print(message);
                 int value = Integer.parseInt(scanner.nextLine());
-                if (value >= 0) {
+                if (value > 0) {
                     return value;
                 } else {
-                    System.out.println("Vui lòng nhập số nguyên lớn hơn hoặc bằng 0.");
+                    System.out.println("Vui lòng nhập số nguyên lớn hơn 0.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số nguyên.");
@@ -32,16 +32,16 @@ public class Validator {
         }
     }
 
-    // Validate số thực float lớn hơn hoặc bằng 0
+    // Validate số thực float lớn hơn 0
     public static float validateFloat(Scanner scanner, String message) {
         while (true) {
             try {
                 System.out.print(message);
                 float value = Float.parseFloat(scanner.nextLine());
-                if (value >= 0) {
+                if (value > 0) {
                     return value;
                 } else {
-                    System.out.println("Vui lòng nhập số thực (float) lớn hơn hoặc bằng 0.");
+                    System.out.println("Vui lòng nhập số thực (float) lớn hơn 0.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số thực (float).");
@@ -55,10 +55,10 @@ public class Validator {
             try {
                 System.out.print(message);
                 double value = Double.parseDouble(scanner.nextLine());
-                if (value >= 0) {
+                if (value > 0) {
                     return value;
                 } else {
-                    System.out.println("Vui lòng nhập số thực (double) lớn hơn hoặc bằng 0.");
+                    System.out.println("Vui lòng nhập số thực (double) lớn hơn 0.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng nhập số thực (double).");

@@ -50,7 +50,7 @@ public class InvoiceDetailDaoImp implements InvoiceDetailDao {
             callSt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            System.err.println("Lỗi: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             ConnectionDB.closeConnection(conn, callSt);
         }

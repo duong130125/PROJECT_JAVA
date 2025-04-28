@@ -11,84 +11,112 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDaoImp implements ProductDao {
-
     @Override
     public List<Product> findAll() {
-        List<Product> products = new ArrayList<>();
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_GET_ALL_PRODUCT()}")) {
-            ResultSet rs = call.executeQuery();
+        List<Product> productList = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_GET_ALL_PRODUCT()}");
+
+            ResultSet rs = callSt.executeQuery();
             while (rs.next()) {
-                Product p = new Product(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("brand"),
-                        rs.getDouble("price"),
-                        rs.getInt("stock"),
-                        rs.getBoolean("status")
-                );
-                products.add(p);
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setBrand(rs.getString("brand"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
+                productList.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
-        return products;
+
+        return productList;
     }
 
     @Override
     public boolean save(Product product) {
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_INSERT_PRODUCT(?, ?, ?, ?)}")) {
-            call.setString(1, product.getName());
-            call.setString(2, product.getBrand());
-            call.setDouble(3, product.getPrice());
-            call.setInt(4, product.getStock());
-            call.executeUpdate();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_INSERT_PRODUCT(?, ?, ?, ?)}");
+            callSt.setString(1, product.getName());
+            callSt.setString(2, product.getBrand());
+            callSt.setDouble(3, product.getPrice());
+            callSt.setInt(4, product.getStock());
+            callSt.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
+
         return false;
     }
 
     @Override
     public boolean update(Product product) {
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_UPDATE_PRODUCT(?, ?, ?, ?, ?)}")) {
-            call.setInt(1, product.getId());
-            call.setString(2, product.getName());
-            call.setString(3, product.getBrand());
-            call.setDouble(4, product.getPrice());
-            call.setInt(5, product.getStock());
-            call.executeUpdate();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_UPDATE_PRODUCT(?, ?, ?, ?, ?)}");
+            callSt.setInt(1, product.getId());
+            callSt.setString(2, product.getName());
+            callSt.setString(3, product.getBrand());
+            callSt.setDouble(4, product.getPrice());
+            callSt.setInt(5, product.getStock());
+            callSt.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
+
         return false;
     }
 
     @Override
     public boolean delete(Product product) {
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_DELETE_PRODUCT(?)}")) {
-            call.setInt(1, product.getId());
-            call.executeUpdate();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_DELETE_PRODUCT(?)}");
+            callSt.setInt(1, product.getId());
+            callSt.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
+
         return false;
     }
 
     @Override
     public Product findById(int id) {
+        Product product = null;
         Connection conn = null;
         CallableStatement callSt = null;
-        Product product = null;
+
         try {
             conn = ConnectionDB.openConnection();
-            callSt = conn.prepareCall("{call get_product_by_id(?)}");
+            callSt = conn.prepareCall("{CALL get_product_by_id(?)}");
             callSt.setInt(1, id);
 
             ResultSet rs = callSt.executeQuery();
@@ -102,65 +130,106 @@ public class ProductDaoImp implements ProductDao {
                 product.setStatus(rs.getBoolean("status"));
             }
         } catch (SQLException e) {
-            e.fillInStackTrace();
-        } catch (Exception e) {
-            e.fillInStackTrace();
+            e.printStackTrace();
         } finally {
             ConnectionDB.closeConnection(conn, callSt);
         }
+
         return product;
     }
 
     @Override
     public List<Product> findByName(String name) {
-        List<Product> list = new ArrayList<>();
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_PRO_NAME(?)}")) {
-            call.setString(1, name);
-            ResultSet rs = call.executeQuery();
+        List<Product> productList = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_FIND_BY_PRO_NAME(?)}");
+            callSt.setString(1, name);
+
+            ResultSet rs = callSt.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
-                        rs.getDouble("price"), rs.getInt("stock"), rs.getBoolean("status")));
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setBrand(rs.getString("brand"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
+                productList.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
-        return list;
+
+        return productList;
     }
 
     @Override
     public List<Product> findByBrand(String brand) {
-        List<Product> list = new ArrayList<>();
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_BRAND(?)}")) {
-            call.setString(1, brand);
-            ResultSet rs = call.executeQuery();
+        List<Product> productList = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_FIND_BY_BRAND(?)}");
+            callSt.setString(1, brand);
+
+            ResultSet rs = callSt.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
-                        rs.getDouble("price"), rs.getInt("stock"), rs.getBoolean("status")));
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setBrand(rs.getString("brand"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
+                productList.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
-        return list;
+
+        return productList;
     }
 
     @Override
     public List<Product> findByPriceRange(double min, double max) {
-        List<Product> list = new ArrayList<>();
-        try (Connection conn = ConnectionDB.openConnection();
-             CallableStatement call = conn.prepareCall("{CALL PROC_FIND_BY_PRICE_RANGE(?, ?)}")) {
-            call.setDouble(1, min);
-            call.setDouble(2, max);
-            ResultSet rs = call.executeQuery();
+        List<Product> productList = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callSt = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{CALL PROC_FIND_BY_PRICE_RANGE(?, ?)}");
+            callSt.setDouble(1, min);
+            callSt.setDouble(2, max);
+
+            ResultSet rs = callSt.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getString("brand"),
-                        rs.getDouble("price"), rs.getInt("stock"), rs.getBoolean("status")));
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setBrand(rs.getString("brand"));
+                product.setPrice(rs.getDouble("price"));
+                product.setStock(rs.getInt("stock"));
+                product.setStatus(rs.getBoolean("status"));
+                productList.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
         }
-        return list;
+
+        return productList;
     }
 
     @Override

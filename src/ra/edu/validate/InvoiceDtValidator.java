@@ -18,24 +18,56 @@ public class InvoiceDtValidator {
             for (Product product : productList) {
                 if (product.getId() == productId) {
                     exists = true;
-                    System.out.println("Sản phẩm: " + product.getName() + " | Giá: " + product.getPrice());
+                    System.out.println(Product.getTableHeader());
+                    System.out.println(product);
+                    System.out.println(Product.getSeparatorLine());
                     break;
                 }
             }
 
             if (!exists) {
                 System.err.println("Mã sản phẩm không tồn tại, vui lòng nhập lại.");
-                System.out.println("Danh sách sản phẩm hiện có:");
-                for (Product product : productList) {
-                    System.out.println("ID: " + product.getId() + " - " + product.getName() + " - Giá: " + product.getPrice());
+                System.out.println("============== DANH SÁCH SẢN PHẨM ================");
+                System.out.println(Product.getTableHeader());
+                for (Product p : productList) {
+                    System.out.println(p);
+                    System.out.println(Product.getSeparatorLine());
                 }
                 System.out.print("Nhập lại mã sản phẩm: ");
-                productId = scanner.nextInt();
+                productId = Integer.parseInt(scanner.nextLine());
             } else {
                 break;
             }
         } while (true);
 
         return productId;
+    }
+
+    public static boolean validateProductStock(int productId, int quantity) {
+        Product product = productService.findById(productId);
+        if (product != null) {
+            if (product.getStock() >= quantity) {
+                return true;
+            } else {
+                System.err.println("Số lượng tồn kho không đủ. Hiện chỉ có " + product.getStock() + " sản phẩm.");
+                return false;
+            }
+        }
+        System.err.println("Không tìm thấy sản phẩm với mã " + productId);
+        return false;
+    }
+
+    public static boolean validateProductStatus(int productId) {
+        Product product = productService.findById(productId);
+        if (product != null) {
+            if (product.isStatus()) {
+                return true;
+            } else {
+                System.err.println("Sản phẩm hiện đang không hoạt động và không thể được đặt hàng.");
+                return false;
+            }
+        }
+        System.err.println("Không tìm thấy sản phẩm với mã " + productId);
+        return false;
     }
 }

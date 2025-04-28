@@ -2,7 +2,6 @@ package ra.edu.business.model;
 
 import ra.edu.utils.IApp;
 import ra.edu.validate.CustomerValidator;
-import ra.edu.validate.ProductValidator;
 import ra.edu.validate.Validator;
 
 import java.util.Scanner;
@@ -93,10 +92,53 @@ public class Customer implements IApp {
         return CustomerValidator.isPhoneUnique(scanner, customerPhone);
     }
 
+    // ANSI color codes
+    public static final String RESET = "\u001B[0m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String RED = "\u001B[31m";
+
+    // Max column widths
+    private static final int WIDTH_ID = 10;
+    private static final int WIDTH_NAME = 25;
+    private static final int WIDTH_PHONE = 15;
+    private static final int WIDTH_EMAIL = 30;
+    private static final int WIDTH_ADDRESS = 30;
+
+    public static String repeat(char ch, int length) {
+        return new String(new char[length]).replace('\0', ch);
+    }
+
+    public static String getSeparatorLine() {
+        return "+" + repeat('-', WIDTH_ID + 2)
+                + "+" + repeat('-', WIDTH_NAME + 2)
+                + "+" + repeat('-', WIDTH_PHONE + 2)
+                + "+" + repeat('-', WIDTH_EMAIL + 2)
+                + "+" + repeat('-', WIDTH_ADDRESS + 2) + "+";
+    }
+
+    public static String getTableHeader() {
+        return getSeparatorLine() + "\n" +
+                String.format("| " + YELLOW + "%-" + WIDTH_ID + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_NAME + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_PHONE + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_EMAIL + "s" + RESET + " | "
+                                + YELLOW + "%-" + WIDTH_ADDRESS + "s" + RESET + " |",
+                        "MÃ KH", "TÊN KHÁCH HÀNG", "SỐ ĐIỆN THOẠI", "EMAIL", "ĐỊA CHỈ") + "\n" +
+                getSeparatorLine();
+    }
+
+    public String formatCustomerData() {
+        return String.format("| " + GREEN + "%-" + WIDTH_ID + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_NAME + "s" + RESET + " | "
+                        + RED + "%-" + WIDTH_PHONE + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_EMAIL + "s" + RESET + " | "
+                        + GREEN + "%-" + WIDTH_ADDRESS + "s" + RESET + " |",
+                id, name, phone, email, address);
+    }
+
     @Override
     public String toString() {
-        return "Mã khách hàng: " + this.id + " - Tên khách hàng: "
-                + this.name + " - Số điện thoai: " + this.phone
-                + " - Email khách hàng: " + this.email + " - Địa chỉ khách hàng: " + this.address;
+        return formatCustomerData();
     }
 }
