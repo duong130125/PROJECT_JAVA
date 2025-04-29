@@ -42,7 +42,7 @@ public class CustomerUI {
                     System.out.println("Quay lại menu chính...");
                     return;
                 default:
-                    System.err.println("Lựa chọn không hợp lệ. Vui lòng chọn từ 1-5!");
+                    System.err.println("\u001B[31mLựa chọn không hợp lệ. Vui lòng chọn từ 1-5!\u001B[0m");
             }
         } while (true);
     }
@@ -51,7 +51,7 @@ public class CustomerUI {
         System.out.println("========== DANH SÁCH KHÁCH HÀNG ==========");
         List<Customer> listCustomer = customerService.findAll();
         if (listCustomer.isEmpty()) {
-            System.out.println("Không có khách hàng nào trong DB.");
+            System.out.println("\u001B[31mKhông có khách hàng nào trong DB.\u001B[0m");
         } else {
             System.out.println(Customer.getTableHeader());
             for (Customer customer : listCustomer) {
@@ -70,7 +70,7 @@ public class CustomerUI {
             if (result) {
                 System.out.println("Thêm mới khách hàng thành công");
             } else {
-                System.err.println("Có lỗi trong quá trình thêm mới");
+                System.err.println("\u001B[31mCó lỗi trong quá trình thêm mới\u001B[0m");
             }
         }
     }
@@ -103,15 +103,15 @@ public class CustomerUI {
                         break;
                     case 5:
                         boolean result = customerService.update(c);
-                        System.out.println(result ? "Cập nhật khách hàng thành công!" : "Cập nhật khách hàng thất bại!");
+                        System.out.println(result ? "Cập nhật khách hàng thành công!" : "\u001B[31mCập nhật khách hàng thất bại!\u001B[0m");
                         return;
                     default:
-                        System.out.println("Lựa chọn không hợp lệ, vui lòng chọn từ 1->5!!!");
+                        System.out.println("\u001B[31mLựa chọn không hợp lệ, vui lòng chọn từ 1->5!!!\u001B[0m");
                 }
 
             } while (true);
         } else {
-            System.out.println("Không tìm thấy khách hàng với ID này.");
+            System.out.println("\u001B[31mKhông tìm thấy khách hàng với ID này.\u001B[0m");
         }
     }
 
@@ -127,7 +127,7 @@ public class CustomerUI {
                 System.err.println("Có lỗi trong quá trình xóa.");
             }
         } else {
-            System.err.println("Mã khách hàng không tồn tại");
+            System.err.println("\u001B[31mMã khách hàng không tồn tại\u001B[0m");
         }
     }
 

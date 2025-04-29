@@ -28,7 +28,7 @@ public class MainApplication {
                     scanner.close();
                     System.exit(0);
                 default:
-                    System.out.println("Lựa chọn không hợp lệ. Vui lòng thử lại.");
+                    System.out.println("\u001B[31mLựa chọn không hợp lệ. Vui lòng thử lại.\u001B[0m");
             }
         } while (true);
     }
